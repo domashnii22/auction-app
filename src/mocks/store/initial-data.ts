@@ -1,0 +1,162 @@
+import type { IAuction } from './auction-store';
+
+export const initialAuctions: IAuction[] = [
+  {
+    id: '1',
+    cargoNumber: 'CARGO-001',
+    type: 'Up',
+    status: 'Active',
+    route: {
+      from: 'Москва',
+      to: 'Санкт-Петербург',
+    },
+    cargo: {
+      name: 'Строительные материалы',
+      weight: 5000,
+      volume: 20,
+      bodyType: 'Тент',
+    },
+    currentPrice: 15000,
+    pricePerKm: 15,
+    step: 1000,
+    trading: {
+      canSetBet: true,
+      myBet: undefined,
+      userStatus: 'NotParticipating',
+      minPrice: 13000,
+      maxPrice: 25000,
+    },
+    dates: {
+      loading: '2024-08-15',
+      unloading: '2024-08-16',
+    },
+    organizer: {
+      name: 'ООО ТрансЛогистик',
+      contacts: {
+        phone: '+7 (999) 123-45-67',
+        email: 'info@translogistic.ru',
+      },
+    },
+    hideBetsHistory: false,
+    hidePointsAddressAndContacts: false,
+    noViewCargoPrice: false,
+    bets: [
+      {
+        id: 'bet-1',
+        price: 14000,
+        participant: 'ИП Иванов',
+        isWinner: false,
+        isCancelled: false,
+        createdAt: '2024-08-14T14:20:00Z',
+      },
+      {
+        id: 'bet-2',
+        price: 13000,
+        participant: 'ООО Грузовик',
+        isWinner: false,
+        isCancelled: false,
+        createdAt: '2024-08-14T13:10:00Z',
+      },
+    ],
+  },
+  {
+    id: '2',
+    cargoNumber: 'CARGO-002',
+    type: 'Down',
+    status: 'Active',
+    route: {
+      from: 'Екатеринбург',
+      to: 'Новосибирск',
+    },
+    cargo: {
+      name: 'Электроника',
+      weight: 2000,
+      volume: 10,
+      bodyType: 'Фургон',
+    },
+    currentPrice: 12000,
+    pricePerKm: 12,
+    step: 500,
+    trading: {
+      canSetBet: true,
+      myBet: 12000,
+      userStatus: 'Leading',
+      minPrice: 11000,
+      maxPrice: 20000,
+    },
+    dates: {
+      loading: '2024-08-20',
+      unloading: '2024-08-22',
+    },
+    organizer: {
+      name: 'ООО Сибирский транзит',
+      contacts: {
+        phone: '+7 (888) 987-65-43',
+        email: 'info@siberiantransit.ru',
+      },
+    },
+    hideBetsHistory: false,
+    hidePointsAddressAndContacts: false,
+    noViewCargoPrice: false,
+    bets: [
+      {
+        id: 'bet-3',
+        price: 12000,
+        participant: 'me',
+        isWinner: false,
+        isCancelled: false,
+        createdAt: '2024-08-19T10:00:00Z',
+      },
+      {
+        id: 'bet-4',
+        price: 11000,
+        participant: 'ООО Автотрейд',
+        isWinner: false,
+        isCancelled: true,
+        cancelReason: 'Отказ от участия',
+        createdAt: '2024-08-19T09:00:00Z',
+      },
+    ],
+  },
+  {
+    id: '3',
+    cargoNumber: 'CARGO-003',
+    type: 'FixPrice',
+    status: 'Completed',
+    route: {
+      from: 'Казань',
+      to: 'Нижний Новгород',
+    },
+    cargo: {
+      name: 'Продукты питания',
+      weight: 3000,
+      volume: 15,
+      bodyType: 'Рефрижератор',
+    },
+    currentPrice: 18000,
+    pricePerKm: 18,
+    step: 1000,
+    trading: {
+      canSetBet: false,
+      myBet: undefined,
+      userStatus: 'NotParticipating',
+      minPrice: 17000,
+      maxPrice: 19000,
+    },
+    dates: {
+      loading: '2024-08-10',
+      unloading: '2024-08-11',
+    },
+    organizer: {
+      name: 'ООО Волга-Транс',
+      contacts: {
+        phone: '+7 (777) 555-33-22',
+        email: 'info@volgatrans.ru',
+      },
+    },
+    hideBetsHistory: true,
+    hidePointsAddressAndContacts: true,
+    noViewCargoPrice: true,
+    bets: [],
+  },
+];
