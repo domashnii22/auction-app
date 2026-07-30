@@ -1,15 +1,17 @@
 import React from 'react';
 import { useAuctionsList } from '../model/useAuctionsList';
 import {
-  Box,
   Grid,
   CircularProgress,
   Alert,
   Pagination,
   Typography,
+  Stack,
 } from '@mui/material';
 import { AuctionCard } from '@/features/auctions-list/ui/AuctionCard';
 import type { IAuctionFilters } from '@/shared/types/api/auctions';
+
+const LIMIT = 3;
 
 interface AuctionsListProps {
   page: number;
@@ -24,7 +26,7 @@ export const AuctionsList: React.FC<AuctionsListProps> = ({
 }) => {
   const { data, isLoading, error } = useAuctionsList({
     page,
-    limit: 10,
+    limit: LIMIT,
     filters,
   });
 
@@ -33,7 +35,7 @@ export const AuctionsList: React.FC<AuctionsListProps> = ({
   if (!data?.items.length) return <Typography>Нет аукционов</Typography>;
 
   return (
-    <Box>
+    <Stack spacing={3}>
       <Grid container spacing={3}>
         {data.items.map((auction) => (
           <Grid size={{ xs: 12, sm: 6, md: 4 }} key={auction.id}>
@@ -42,12 +44,14 @@ export const AuctionsList: React.FC<AuctionsListProps> = ({
         ))}
       </Grid>
       {data.totalPages > 1 && (
-        <Pagination
-          count={data.totalPages}
-          page={data.page}
-          onChange={(_, value) => onPageChange(value)}
-        />
+        <Stack style={{ alignItems: 'center' }}>
+          <Pagination
+            count={data.totalPages}
+            page={data.page}
+            onChange={(_, value) => onPageChange(value)}
+          />
+        </Stack>
       )}
-    </Box>
+    </Stack>
   );
 };
