@@ -65,8 +65,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
       onClick={handleCardClick}
     >
       <CardContent>
-        {/* Верхняя часть: номер и статусы */}
-        <Stack>
+        <Stack spacing={1}>
           <Box>
             <Typography variant="h6" component="div">
               Заявка #{auction.cargoNumber}
