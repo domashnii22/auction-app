@@ -1,38 +1,63 @@
 import React from 'react';
 import { useAuctionsList } from '../model/useAuctionsList';
-import {
-  Grid,
-  CircularProgress,
-  Alert,
-  Pagination,
-  Typography,
-  Stack,
-} from '@mui/material';
+import { Grid, Pagination, Typography, Stack } from '@mui/material';
 import { AuctionCard } from '@/features/auctions-list/ui/AuctionCard';
 import type { IAuctionFilters } from '@/shared/types/api/auctions';
-
-const LIMIT = 3;
+import { SkeletonList } from './SkeletonList';
+import { ErrorState } from './ErrorState';
+import { EmptyState } from './EmptyState';
 
 interface AuctionsListProps {
   page: number;
+  limit?: number;
   filters?: IAuctionFilters;
   onPageChange: (page: number) => void;
+  onResetFilters?: () => void;
+  onRetry?: () => void;
 }
 
 export const AuctionsList: React.FC<AuctionsListProps> = ({
   page,
+  limit = 3,
   filters,
   onPageChange,
+  onResetFilters,
+  onRetry,
 }) => {
-  const { data, isLoading, error } = useAuctionsList({
+  const { data, isLoading, error, isFetching, refetch } = useAuctionsList({
     page,
-    limit: LIMIT,
+    limit,
     filters,
   });
 
-  if (isLoading) return <CircularProgress />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
-  if (!data?.items.length) return <Typography>Нет аукционов</Typography>;
+  const hasFilters =
+    filters &&
+    Object.values(filters).some(
+      (value) => value !== undefined && value !== '' && value !== null,
+    );
+
+  if (isLoading) {
+    return <SkeletonList count={3} />;
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        error={error}
+        onRetry={() => {
+          if (onRetry) {
+            onRetry();
+          } else {
+            refetch();
+          }
+        }}
+      />
+    );
+  }
+
+  if (!data || data.items.length === 0) {
+    return <EmptyState hasFilters={hasFilters} onReset={onResetFilters} />;
+  }
 
   return (
     <Stack spacing={3}>
@@ -43,6 +68,17 @@ export const AuctionsList: React.FC<AuctionsListProps> = ({
           </Grid>
         ))}
       </Grid>
+
+      {isFetching && (
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ display: 'block', textAlign: 'center', mt: 1 }}
+        >
+          Обновление...
+        </Typography>
+      )}
+
       {data.totalPages > 1 && (
         <Stack style={{ alignItems: 'center' }}>
           <Pagination
