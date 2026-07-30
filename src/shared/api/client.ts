@@ -1,4 +1,10 @@
-export const API_BASE_URL = '/api';
+import type {
+  IAuction,
+  IAuctionsListRequest,
+  IAuctionsListResponse,
+} from '../types/api/auctions';
+
+const API_BASE_URL = '/api';
 
 export async function apiClient<T>(
   endpoint: string,
@@ -18,3 +24,31 @@ export async function apiClient<T>(
 
   return response.json();
 }
+
+export const auctionApi = {
+  getList: (data: IAuctionsListRequest): Promise<IAuctionsListResponse> => {
+    return apiClient<IAuctionsListResponse>('/auctions/list', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  getDetail: (id: string): Promise<IAuction> => {
+    return apiClient<IAuction>(`/auctions/${id}`, {
+      method: 'GET',
+    });
+  },
+
+  getBets: (id: string): Promise<any> => {
+    return apiClient(`/auctions/${id}/bets`, {
+      method: 'GET',
+    });
+  },
+
+  setBet: (id: string, price: number): Promise<{ success: boolean }> => {
+    return apiClient(`/auctions/${id}/bets`, {
+      method: 'POST',
+      body: JSON.stringify({ price }),
+    });
+  },
+};

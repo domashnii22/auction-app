@@ -1,4 +1,4 @@
-import type { IAuction } from './auction-store';
+import type { IAuction } from '@/shared/types/api/auctions';
 
 export const initialAuctions: IAuction[] = [
   {

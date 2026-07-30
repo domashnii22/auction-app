@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { initialAuctions } from './initial-data';
+import type { IAuction } from '@/shared/types/api/auctions';
 
 export interface IBet {
   id: string;
@@ -9,48 +10,6 @@ export interface IBet {
   isCancelled: boolean;
   cancelReason?: string;
   createdAt: string;
-}
-
-export interface IAuction {
-  id: string;
-  cargoNumber: string;
-  type: 'Request' | 'Up' | 'Down' | 'FixPrice';
-  status: 'Active' | 'Completed' | 'Cancelled';
-  route: {
-    from: string;
-    to: string;
-  };
-  cargo: {
-    name: string;
-    weight: number;
-    volume: number;
-    bodyType: string;
-  };
-  currentPrice: number;
-  pricePerKm: number;
-  step: number;
-  trading: {
-    canSetBet: boolean;
-    myBet?: number;
-    userStatus: 'Leading' | 'Losing' | 'Winner' | 'NotParticipating';
-    minPrice: number;
-    maxPrice: number;
-  };
-  dates: {
-    loading: string;
-    unloading: string;
-  };
-  organizer: {
-    name: string;
-    contacts?: {
-      phone?: string;
-      email?: string;
-    };
-  };
-  hideBetsHistory: boolean;
-  hidePointsAddressAndContacts: boolean;
-  noViewCargoPrice: boolean;
-  bets: IBet[];
 }
 
 export class AuctionStore {
