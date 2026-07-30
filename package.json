@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate": "npx @tanstack/router-cli generate"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -16,6 +17,7 @@
     "@mui/material": "^9.2.0",
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-router": "^1.170.18",
+    "@tanstack/router-devtools": "^1.167.0",
     "msw": "^2.15.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@tanstack/router-cli": "^1.167.21",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
