@@ -9,10 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 import { AuctionCard } from '@/features/auctions-list/ui/AuctionCard';
+import type { IAuctionFilters } from '@/shared/types/api/auctions';
 
 interface AuctionsListProps {
   page: number;
-  filters?: any;
+  filters?: IAuctionFilters;
   onPageChange: (page: number) => void;
 }
 

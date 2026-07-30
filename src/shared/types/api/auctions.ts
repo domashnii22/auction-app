@@ -50,18 +50,20 @@ export interface IAuctionsListResponse {
 export interface IAuctionsListRequest {
   page: number;
   limit: number;
-  filters?: {
-    cargo_num?: string;
-    status?: 'Active' | 'Completed' | 'Cancelled';
-    statuses?: string[];
-    auc_type?: string;
-    load_city?: string;
-    unload_city?: string;
-    date_from?: string;
-    date_to?: string;
-    is_available?: boolean;
-    is_bidder?: boolean;
-    price_from?: number;
-    price_to?: number;
-  };
+  filters?: IAuctionFilters;
+}
+
+export interface IAuctionFilters {
+  cargo_num?: string;
+  status?: 'Active' | 'Completed' | 'Cancelled';
+  statuses?: string[];
+  auc_type?: string;
+  load_city?: string;
+  unload_city?: string;
+  date_from?: string;
+  date_to?: string;
+  is_available?: boolean;
+  is_bidder?: boolean;
+  price_from?: number;
+  price_to?: number;
 }
