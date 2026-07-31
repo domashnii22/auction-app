@@ -87,11 +87,33 @@ export const searchSchema = z.object({
       message: 'Некорректный формат даты',
     }),
 
-  is_available: z.coerce.boolean().optional().default(false).catch(false),
-  is_bidder: z.coerce.boolean().optional().default(false).catch(false),
+  is_available: z.coerce
+    .boolean()
+    .optional()
+    .default(false)
+    .catch(false)
+    .transform((val) => (val ? val : undefined)),
 
-  price_from: z.coerce.number().optional().default(0).catch(0),
-  price_to: z.coerce.number().optional().default(0).catch(0),
+  is_bidder: z.coerce
+    .boolean()
+    .optional()
+    .default(false)
+    .catch(false)
+    .transform((val) => (val ? val : undefined)),
+
+  price_from: z.coerce
+    .number()
+    .optional()
+    .default(0)
+    .catch(0)
+    .transform((val) => (val ? val : undefined)),
+
+  price_to: z.coerce
+    .number()
+    .optional()
+    .default(0)
+    .catch(0)
+    .transform((val) => (val ? val : undefined)),
 });
 
 export type SearchParams = z.infer<typeof searchSchema>;
