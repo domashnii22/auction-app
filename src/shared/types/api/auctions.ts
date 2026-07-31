@@ -65,9 +65,9 @@ export interface IAuctionsListRequest {
 
 export interface IAuctionFilters {
   cargo_num?: string;
-  status?: 'Active' | 'Completed' | 'Cancelled';
+  status?: StatusValues;
   statuses?: string[] | [];
-  auc_type?: 'Request' | 'Up' | 'Down' | 'FixPrice';
+  auc_type?: TypeValues;
   load_city?: string;
   unload_city?: string;
   date_from?: string;
@@ -77,3 +77,7 @@ export interface IAuctionFilters {
   price_from?: number;
   price_to?: number;
 }
+
+export type StatusValues = 'Active' | 'Completed' | 'Cancelled';
+
+export type TypeValues = 'Request' | 'Up' | 'Down' | 'FixPrice';
