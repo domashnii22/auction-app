@@ -2,10 +2,15 @@ import React, { useCallback } from 'react';
 import { useSearch, useNavigate } from '@tanstack/react-router';
 import { Filters } from '@features/auctions-list/ui/Filters';
 import { PAGINATION } from '@/shared/config/pagination';
-import type { SearchParams } from '@/features/auctions-list/model/searchSchema';
+import {
+  getDefaultSearchParams,
+  type SearchParams,
+} from '@/features/auctions-list/model/searchSchema';
+
+export type SearchFilters = Omit<SearchParams, 'page' | 'limit'>;
 
 export const AuctionsListPage: React.FC = () => {
-  const search = useSearch({ from: '/' }) as SearchParams;
+  const search = useSearch({ from: '/' });
   const navigate = useNavigate();
 
   const { page, limit, ...filters } = search;
@@ -14,7 +19,7 @@ export const AuctionsListPage: React.FC = () => {
     (newPage: number) => {
       navigate({
         to: '/',
-        search: { ...search, page: newPage } as SearchParams,
+        search: { ...search, page: newPage },
       });
     },
     [navigate, search],
@@ -37,22 +42,7 @@ export const AuctionsListPage: React.FC = () => {
   const handleResetFilters = useCallback(() => {
     navigate({
       to: '/',
-      search: {
-        page: PAGINATION.DEFAULT_PAGE,
-        limit: PAGINATION.DEFAULT_LIMIT,
-        cargo_num: undefined,
-        status: undefined,
-        statuses: undefined,
-        auc_type: undefined,
-        load_city: undefined,
-        unload_city: undefined,
-        date_from: undefined,
-        date_to: undefined,
-        is_available: false,
-        is_bidder: false,
-        price_from: 0,
-        price_to: 0,
-      },
+      search: getDefaultSearchParams(),
     });
   }, [navigate]);
 
@@ -60,7 +50,7 @@ export const AuctionsListPage: React.FC = () => {
     <>
       <Filters
         onFilterChange={handleFilterChange}
-        filters={search}
+        filters={filters}
         onResetFilters={handleResetFilters}
       />
       {/* <AuctionsList
