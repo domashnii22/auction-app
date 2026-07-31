@@ -17,31 +17,45 @@ import {
   TrendingDown,
 } from '@mui/icons-material';
 import { useNavigate } from '@tanstack/react-router';
-import type { IAuction } from '@/shared/types/api/auctions';
+import type { IAuction, StatusValues } from '@/shared/types/api/auctions';
 
-interface AuctionCardProps {
-  auction: IAuction;
-}
+export const STATUS_LABELS: Record<StatusValues, string> = {
+  Active: 'Активный',
+  Completed: 'Завершён',
+  Cancelled: 'Отменён',
+};
 
-const statusColors = {
+export const STATUS_COLORS: Record<
+  StatusValues,
+  'success' | 'default' | 'error'
+> = {
   Active: 'success',
   Completed: 'default',
   Cancelled: 'error',
-} as const;
+};
 
-const userStatusLabels = {
+export type UserStatus = 'Leading' | 'Losing' | 'Winner' | 'NotParticipating';
+
+export const USER_STATUS_LABELS: Record<UserStatus, string> = {
   Leading: 'Лидируете',
   Losing: 'Отстаёте',
   Winner: 'Победитель',
   NotParticipating: 'Не участвуете',
 };
 
-const userStatusColors = {
+export const USER_STATUS_COLORS: Record<
+  UserStatus,
+  'info' | 'warning' | 'success' | 'default'
+> = {
   Leading: 'info',
   Losing: 'warning',
   Winner: 'success',
   NotParticipating: 'default',
-} as const;
+};
+
+interface AuctionCardProps {
+  auction: IAuction;
+}
 
 export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
   const navigate = useNavigate();
@@ -81,12 +95,12 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
           <Stack direction="row" spacing={1}>
             <Chip
               label={auction.status}
-              color={statusColors[auction.status]}
+              color={STATUS_COLORS[auction.status]}
               size="small"
             />
             <Chip
-              label={userStatusLabels[auction.trading.userStatus]}
-              color={userStatusColors[auction.trading.userStatus]}
+              label={USER_STATUS_LABELS[auction.trading.userStatus]}
+              color={USER_STATUS_COLORS[auction.trading.userStatus]}
               size="small"
               variant="outlined"
             />
@@ -95,24 +109,21 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
 
         <Divider sx={{ my: 1.5 }} />
 
-        {/* Маршрут */}
-        <Stack>
+        <Stack direction={'row'} spacing={1}>
           <LocationOn fontSize="small" color="action" />
           <Typography variant="body2">
             {auction.route.from} → {auction.route.to}
           </Typography>
         </Stack>
 
-        {/* Даты */}
-        <Stack>
+        <Stack direction={'row'} spacing={1}>
           <CalendarToday fontSize="small" color="action" />
           <Typography variant="body2">
             Погрузка: {new Date(auction.dates.loading).toLocaleDateString()}
           </Typography>
         </Stack>
 
-        {/* Груз */}
-        <Stack>
+        <Stack direction={'row'} spacing={1}>
           <LocalShipping fontSize="small" color="action" />
           <Typography variant="body2">
             {auction.cargo.name} · {auction.cargo.weight}т ·{' '}
@@ -122,19 +133,16 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
 
         <Divider sx={{ my: 1.5 }} />
 
-        {/* Цена и действия */}
-        <Stack>
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">
-              Текущая цена
-            </Typography>
+        <Stack spacing={1}>
+          <Stack spacing={1}>
             <Typography variant="h6">
-              {auction.currentPrice.toLocaleString()} ₽
+              Текущая цена: {auction.currentPrice.toLocaleString()} ₽
             </Typography>
+
             <Typography variant="caption" color="text.secondary">
               Шаг: {auction.step} ₽
             </Typography>
-          </Box>
+          </Stack>
 
           <Button
             variant={auction.trading.myBet ? 'outlined' : 'contained'}
