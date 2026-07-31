@@ -21,7 +21,6 @@ export class AuctionStore {
     });
   }
 
-  // Получить все аукционы с пагинацией и фильтрами
   getAuctions(
     page: number = 1,
     limit: number = 10,
@@ -34,7 +33,6 @@ export class AuctionStore {
   } {
     let items = Array.from(this.auctions.values());
 
-    // Применяем фильтры (упрощённо)
     if (filters) {
       if (filters.cargo_num) {
         items = items.filter((a) => a.cargoNumber.includes(filters.cargo_num));
@@ -42,7 +40,11 @@ export class AuctionStore {
       if (filters.status) {
         items = items.filter((a) => a.status === filters.status);
       }
-      // ... остальные фильтры
+      if (filters.is_bidder === true) {
+        items = items.filter((a) =>
+          a.bets.some((bet) => bet.participant === 'me'),
+        );
+      }
     }
 
     const total = items.length;
@@ -58,19 +60,16 @@ export class AuctionStore {
     };
   }
 
-  // Получить аукцион по ID
   getAuction(id: string): IAuction | undefined {
     const auction = this.auctions.get(id);
     if (!auction) return undefined;
 
-    // Возвращаем копию, чтобы избежать мутаций
     return {
       ...auction,
       bets: [...auction.bets],
     };
   }
 
-  // Добавить ставку
   addBet(
     auctionId: string,
     price: number,
@@ -84,12 +83,10 @@ export class AuctionStore {
       return { success: false, error: 'Аукцион не найден' };
     }
 
-    // Проверяем, можно ли ставить
     if (!auction.trading.canSetBet) {
       return { success: false, error: 'Вы не можете сделать ставку' };
     }
 
-    // Проверяем min/max
     if (price < auction.trading.minPrice) {
       return {
         success: false,
@@ -103,7 +100,6 @@ export class AuctionStore {
       };
     }
 
-    // Создаём ставку
     const bet: IBet = {
       id: uuidv4(),
       price,
@@ -113,19 +109,15 @@ export class AuctionStore {
       createdAt: new Date().toISOString(),
     };
 
-    // Добавляем в историю
     auction.bets.push(bet);
 
-    // Обновляем текущую цену
     auction.currentPrice = price;
 
-    // Обновляем статус пользователя
     if (participant === 'me') {
       auction.trading.myBet = price;
       auction.trading.userStatus = this.calculateUserStatus(auctionId);
     }
 
-    // Проверяем, можно ли ещё ставить
     if (price >= auction.trading.maxPrice) {
       auction.trading.canSetBet = false;
     }
@@ -133,7 +125,6 @@ export class AuctionStore {
     return { success: true };
   }
 
-  // Рассчитать статус пользователя
   private calculateUserStatus(
     auctionId: string,
   ): 'Leading' | 'Losing' | 'Winner' | 'NotParticipating' {
@@ -151,11 +142,7 @@ export class AuctionStore {
     return 'Losing';
   }
 
-  // Обновить статус всех аукционов (для симуляции)
-  updateStatuses() {
-    // Здесь можно добавить логику автоматического обновления статусов
-  }
+  updateStatuses() {}
 }
 
-// Создаём экземпляр store с начальными данными
 export const auctionStore = new AuctionStore(initialAuctions);

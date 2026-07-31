@@ -9,7 +9,7 @@ import type { SearchFilters } from './Filters';
 
 interface AuctionsListProps {
   page: number;
-  limit?: number;
+  limit: number;
   filters?: SearchFilters;
   onPageChange: (page: number) => void;
   onResetFilters?: () => void;
@@ -18,7 +18,7 @@ interface AuctionsListProps {
 
 export const AuctionsList: React.FC<AuctionsListProps> = ({
   page,
-  limit = 3,
+  limit,
   filters,
   onPageChange,
   onResetFilters,

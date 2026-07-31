@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { auctionStore } from '../store/auction-store';
+import type { IAuctionFilters } from '@/shared/types/api/auctions';
 
 export const auctionHandlers = [
   http.get('/api/auctions/:id', ({ params }) => {
@@ -19,14 +20,27 @@ export const auctionHandlers = [
     const body = (await request.json()) as {
       page?: number;
       limit?: number;
-      filters?: any;
+      filters?: IAuctionFilters;
     };
 
     const page = body?.page || 1;
     const limit = body?.limit || 10;
     const filters = body?.filters || {};
 
-    const result = auctionStore.getAuctions(page, limit, filters);
+    let result = auctionStore.getAuctions(page, limit, filters);
+
+    if (filters.is_bidder === true) {
+      result = {
+        ...result,
+        items: result.items.filter((a) =>
+          a.bets.some((bet) => bet.participant === 'me'),
+        ),
+        total: result.items.filter((a) =>
+          a.bets.some((bet) => bet.participant === 'me'),
+        ).length,
+      };
+    }
+
     return HttpResponse.json(result);
   }),
 
