@@ -2,15 +2,15 @@ import React from 'react';
 import { useAuctionsList } from '../model/useAuctionsList';
 import { Grid, Pagination, Typography, Stack } from '@mui/material';
 import { AuctionCard } from '@/features/auctions-list/ui/AuctionCard';
-import type { IAuctionFilters } from '@/shared/types/api/auctions';
 import { SkeletonList } from './SkeletonList';
 import { ErrorState } from './ErrorState';
 import { EmptyState } from './EmptyState';
+import type { SearchFilters } from './Filters';
 
 interface AuctionsListProps {
   page: number;
   limit?: number;
-  filters?: IAuctionFilters;
+  filters?: SearchFilters;
   onPageChange: (page: number) => void;
   onResetFilters?: () => void;
   onRetry?: () => void;

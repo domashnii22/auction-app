@@ -26,11 +26,9 @@ export const searchSchema = z.object({
     .transform((val) => (val ? val : undefined)),
 
   status: z
-    .string()
+    .enum(['Active', 'Completed', 'Cancelled'])
     .optional()
-    .default('')
-    .catch('')
-    .transform((val) => (val ? val : undefined)),
+    .catch(undefined),
 
   statuses: z
     .string()
@@ -41,18 +39,21 @@ export const searchSchema = z.object({
       if (!val) return undefined;
       try {
         const parsed = JSON.parse(val);
-        return Array.isArray(parsed) && parsed.length > 0 ? parsed : undefined;
+        if (!Array.isArray(parsed) || parsed.length === 0) return undefined;
+
+        const validStatuses = parsed.filter((s) =>
+          ['Active', 'Completed', 'Cancelled'].includes(s),
+        );
+        return validStatuses.length > 0 ? validStatuses : undefined;
       } catch {
         return undefined;
       }
     }),
 
   auc_type: z
-    .string()
+    .enum(['Request', 'Up', 'Down', 'FixPrice'])
     .optional()
-    .default('')
-    .catch('')
-    .transform((val) => (val ? val : undefined)),
+    .catch(undefined),
 
   load_city: z
     .string()

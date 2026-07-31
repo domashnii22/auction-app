@@ -1,13 +1,15 @@
 import React, { useCallback } from 'react';
 import { useSearch, useNavigate } from '@tanstack/react-router';
-import { Filters } from '@features/auctions-list/ui/Filters';
+import {
+  Filters,
+  type SearchFilters,
+} from '@features/auctions-list/ui/Filters';
 import { PAGINATION } from '@/shared/config/pagination';
 import {
   getDefaultSearchParams,
   type SearchParams,
 } from '@/features/auctions-list/model/searchSchema';
-
-export type SearchFilters = Omit<SearchParams, 'page' | 'limit'>;
+import { AuctionsList } from '@/features/auctions-list/ui/AuctionsList';
 
 export const AuctionsListPage: React.FC = () => {
   const search = useSearch({ from: '/' });
@@ -26,7 +28,7 @@ export const AuctionsListPage: React.FC = () => {
   );
 
   const handleFilterChange = useCallback(
-    (newFilters: Partial<SearchParams>) => {
+    (newFilters: SearchFilters) => {
       const serializedFilters = {
         ...newFilters,
         statuses: newFilters.statuses?.length
@@ -60,13 +62,13 @@ export const AuctionsListPage: React.FC = () => {
         filters={filters}
         onResetFilters={handleResetFilters}
       />
-      {/* <AuctionsList
-        page={search.page}
-        limit={search.limit}
+      <AuctionsList
+        page={page}
+        limit={limit}
         filters={filters}
         onPageChange={handlePageChange}
         onResetFilters={handleResetFilters}
-      /> */}
+      />
     </>
   );
 };
