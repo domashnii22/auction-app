@@ -27,11 +27,18 @@ export const AuctionsListPage: React.FC = () => {
 
   const handleFilterChange = useCallback(
     (newFilters: Partial<SearchParams>) => {
+      const serializedFilters = {
+        ...newFilters,
+        statuses: newFilters.statuses?.length
+          ? JSON.stringify(newFilters.statuses)
+          : undefined,
+      };
+
       navigate({
         to: '/',
         search: {
           ...search,
-          ...newFilters,
+          ...serializedFilters,
           page: PAGINATION.DEFAULT_PAGE,
         } as SearchParams,
       });
