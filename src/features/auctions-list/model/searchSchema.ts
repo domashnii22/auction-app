@@ -117,3 +117,7 @@ export const searchSchema = z.object({
 });
 
 export type SearchParams = z.infer<typeof searchSchema>;
+
+export const getDefaultSearchParams = (): SearchParams => {
+  return searchSchema.parse({});
+};
