@@ -49,6 +49,16 @@ export class AuctionStore {
       if (filters.auc_type) {
         items = items.filter((a) => a.type === filters.auc_type);
       }
+      if (filters.load_city) {
+        items = items.filter((a) =>
+          a.route.from.toLowerCase().includes(filters.load_city!.toLowerCase()),
+        );
+      }
+      if (filters.unload_city) {
+        items = items.filter((a) =>
+          a.route.to.toLowerCase().includes(filters.unload_city!.toLowerCase()),
+        );
+      }
     }
 
     const total = items.length;

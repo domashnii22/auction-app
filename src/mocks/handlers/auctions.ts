@@ -63,6 +63,30 @@ export const auctionHandlers = [
       };
     }
 
+    if (filters.load_city) {
+      const cityItems = result.items.filter((a) =>
+        a.route.from.toLowerCase().includes(filters.load_city!.toLowerCase()),
+      );
+
+      result = {
+        ...result,
+        items: cityItems,
+        total: cityItems.length,
+      };
+    }
+
+    if (filters.unload_city) {
+      const cityItems = result.items.filter((a) =>
+        a.route.to.toLowerCase().includes(filters.unload_city!.toLowerCase()),
+      );
+
+      result = {
+        ...result,
+        items: cityItems,
+        total: cityItems.length,
+      };
+    }
+
     return HttpResponse.json(result);
   }),
 
