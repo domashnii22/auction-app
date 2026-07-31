@@ -78,7 +78,8 @@ export const Filters: React.FC<FiltersProps> = ({
   };
 
   const handleCityChange =
-    (field: keyof SearchFilters) => (_: any, value: string | null) => {
+    (field: keyof SearchFilters) =>
+    (_: React.SyntheticEvent, value: string | null) => {
       onFilterChange({ ...filters, [field]: value || undefined });
     };
 
@@ -89,8 +90,6 @@ export const Filters: React.FC<FiltersProps> = ({
       value !== null &&
       !(Array.isArray(value) && value.length === 0),
   ).length;
-
-  console.log(filters.statuses);
 
   return (
     <Paper sx={{ p: 2, mb: 3 }}>
