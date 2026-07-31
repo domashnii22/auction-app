@@ -1,7 +1,7 @@
 export interface IAuction {
   id: string;
   cargoNumber: string;
-  type: 'Request' | 'Up' | 'Down' | 'FixPrice';
+  type: AuctionTypesValues;
   status: 'Active' | 'Completed' | 'Cancelled';
   route: {
     from: string;
@@ -39,6 +39,8 @@ export interface IAuction {
   noViewCargoPrice: boolean;
   bets: IBet[];
 }
+
+export type AuctionTypesValues = 'Request' | 'Up' | 'Down' | 'FixPrice';
 
 export interface IBet {
   id: string;

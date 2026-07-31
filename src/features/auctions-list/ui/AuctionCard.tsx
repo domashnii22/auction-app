@@ -15,9 +15,29 @@ import {
   LocalShipping,
   TrendingUp,
   TrendingDown,
+  HelpOutlined,
+  type SvgIconComponent,
 } from '@mui/icons-material';
 import { useNavigate } from '@tanstack/react-router';
-import type { IAuction, StatusValues } from '@/shared/types/api/auctions';
+import type {
+  AuctionTypesValues,
+  IAuction,
+  StatusValues,
+} from '@/shared/types/api/auctions';
+
+export const TYPE_LABELS: Record<AuctionTypesValues, string> = {
+  Request: 'Запрос',
+  Up: 'Повышение',
+  Down: 'Понижение',
+  FixPrice: 'Фиксированная цена',
+};
+
+export const TYPE_ICONS: Record<AuctionTypesValues, SvgIconComponent> = {
+  Request: HelpOutlined,
+  Up: TrendingUp,
+  Down: TrendingDown,
+  FixPrice: HelpOutlined,
+};
 
 export const STATUS_LABELS: Record<StatusValues, string> = {
   Active: 'Активный',
@@ -60,6 +80,8 @@ interface AuctionCardProps {
 export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
   const navigate = useNavigate();
 
+  const TypeIcon = TYPE_ICONS[auction.type];
+
   const handleCardClick = () => {
     navigate({ to: `/auctions/${auction.id}` });
   };
@@ -85,16 +107,16 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
               Заявка #{auction.cargoNumber}
             </Typography>
             <Chip
-              label={auction.type}
+              label={TYPE_LABELS[auction.type]}
               size="small"
               variant="outlined"
-              icon={auction.type === 'Up' ? <TrendingUp /> : <TrendingDown />}
+              icon={<TypeIcon />}
               sx={{ mt: 0.5 }}
             />
           </Box>
           <Stack direction="row" spacing={1}>
             <Chip
-              label={auction.status}
+              label={STATUS_LABELS[auction.status]}
               color={STATUS_COLORS[auction.status]}
               size="small"
             />
