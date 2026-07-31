@@ -29,15 +29,27 @@ export const auctionHandlers = [
 
     let result = auctionStore.getAuctions(page, limit, filters);
 
-    if (filters.is_bidder === true) {
+    if (filters.is_available === true) {
+      const availableItems = result.items.filter(
+        (a) => a.trading.canSetBet === true,
+      );
+
       result = {
         ...result,
-        items: result.items.filter((a) =>
-          a.bets.some((bet) => bet.participant === 'me'),
-        ),
-        total: result.items.filter((a) =>
-          a.bets.some((bet) => bet.participant === 'me'),
-        ).length,
+        items: availableItems,
+        total: availableItems.length,
+      };
+    }
+
+    if (filters.is_bidder === true) {
+      const bidderItems = result.items.filter(
+        (a) => a.trading.myBet !== undefined,
+      );
+
+      result = {
+        ...result,
+        items: bidderItems,
+        total: bidderItems.length,
       };
     }
 
