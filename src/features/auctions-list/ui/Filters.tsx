@@ -72,7 +72,7 @@ export const Filters: React.FC<FiltersProps> = ({
 
   const handleStatusesChange = (
     _event: React.SyntheticEvent,
-    values: string[],
+    values: StatusValues[],
   ) => {
     onFilterChange({ ...filters, statuses: values });
   };
@@ -161,7 +161,7 @@ export const Filters: React.FC<FiltersProps> = ({
               getOptionLabel={(option) =>
                 statusOptions.find((s) => s.value === option)?.label || option
               }
-              value={filters.statuses || []}
+              value={filters.statuses}
               onChange={handleStatusesChange}
               renderInput={(params) => (
                 <TextField

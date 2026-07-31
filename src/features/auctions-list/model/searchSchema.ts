@@ -1,4 +1,5 @@
 import { PAGINATION } from '@/shared/config/pagination';
+import type { StatusValues } from '@/shared/types/api/auctions';
 import { z } from 'zod';
 
 export const searchSchema = z.object({
@@ -36,7 +37,7 @@ export const searchSchema = z.object({
     .optional()
     .default('')
     .catch('')
-    .transform((val): string[] | undefined => {
+    .transform((val): StatusValues[] | undefined => {
       if (!val) return undefined;
       try {
         const parsed = JSON.parse(val);
