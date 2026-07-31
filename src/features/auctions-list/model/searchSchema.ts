@@ -1,17 +1,25 @@
+import { PAGINATION } from '@/shared/config/pagination';
 import { z } from 'zod';
 
 export const searchSchema = z.object({
-  page: z.number().int().min(1).default(1).catch(1),
+  page: z.coerce
+    .number()
+    .int()
+    .min(PAGINATION.DEFAULT_PAGE)
+    .default(PAGINATION.DEFAULT_PAGE)
+    .catch(PAGINATION.DEFAULT_PAGE),
 
-  limit: z.number().int().min(1).max(50).default(3).catch(3),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(PAGINATION.MIN_LIMIT)
+    .max(PAGINATION.MAX_LIMIT)
+    .default(PAGINATION.DEFAULT_LIMIT)
+    .catch(PAGINATION.DEFAULT_LIMIT),
 
   cargo_num: z.string().optional().default('').catch(''),
 
-  status: z
-    .enum(['Active', 'Completed', 'Cancelled'])
-    .optional()
-    .default('Active')
-    .catch('Active'),
+  status: z.string().optional().default('').catch(''),
 
   statuses: z
     .string()
@@ -20,11 +28,7 @@ export const searchSchema = z.object({
     .catch('')
     .transform((val) => (val ? val.split(',') : [])),
 
-  auc_type: z
-    .enum(['Request', 'Up', 'Down', 'FixPrice'])
-    .optional()
-    .default('Request')
-    .catch('Request'),
+  auc_type: z.string().optional().default('').catch(''),
 
   load_city: z.string().optional().default('').catch(''),
 
@@ -52,19 +56,9 @@ export const searchSchema = z.object({
 
   is_bidder: z.coerce.boolean().optional().default(true).catch(true),
 
-  price_from: z
-    .string()
-    .optional()
-    .default('')
-    .catch('')
-    .transform((val) => (val ? Number(val) : undefined)),
+  price_from: z.coerce.number().optional().default(0).catch(0),
 
-  price_to: z
-    .string()
-    .optional()
-    .default('')
-    .catch('')
-    .transform((val) => (val ? Number(val) : undefined)),
+  price_to: z.coerce.number().optional().default(0).catch(0),
 });
 
 export type SearchParams = z.infer<typeof searchSchema>;
