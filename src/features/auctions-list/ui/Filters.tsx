@@ -30,13 +30,13 @@ interface FiltersProps {
   filters: SearchFilters;
 }
 
-const statusOptions: Array<{ value: StatusValues; label: string }> = [
+const STATUS_OPTIONS: Array<{ value: StatusValues; label: string }> = [
   { value: 'Active', label: 'Активный' },
   { value: 'Completed', label: 'Завершён' },
   { value: 'Cancelled', label: 'Отменён' },
 ];
 
-const auctionTypeOptions: Array<{ value: TypeValues; label: string }> = [
+const AUCTION_TYPE_OPTIONS: Array<{ value: TypeValues; label: string }> = [
   { value: 'Request', label: 'Запрос' },
   { value: 'Up', label: 'Повышение' },
   { value: 'Down', label: 'Понижение' },
@@ -143,7 +143,7 @@ export const Filters: React.FC<FiltersProps> = ({
                 label="Статус"
               >
                 <MenuItem value="">Все</MenuItem>
-                {statusOptions.map((option) => (
+                {STATUS_OPTIONS.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
@@ -156,9 +156,9 @@ export const Filters: React.FC<FiltersProps> = ({
             <Autocomplete
               multiple
               size="small"
-              options={statusOptions.map((s) => s.value)}
+              options={STATUS_OPTIONS.map((s) => s.value)}
               getOptionLabel={(option) =>
-                statusOptions.find((s) => s.value === option)?.label || option
+                STATUS_OPTIONS.find((s) => s.value === option)?.label || option
               }
               value={filters.statuses}
               onChange={handleStatusesChange}
@@ -181,7 +181,7 @@ export const Filters: React.FC<FiltersProps> = ({
                 label="Тип аукциона"
               >
                 <MenuItem value="">Все</MenuItem>
-                {auctionTypeOptions.map((option) => (
+                {AUCTION_TYPE_OPTIONS.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
                   </MenuItem>
