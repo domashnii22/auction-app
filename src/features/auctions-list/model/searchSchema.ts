@@ -36,13 +36,13 @@ export const searchSchema = z.object({
     .optional()
     .default('')
     .catch('')
-    .transform((val): string[] => {
-      if (!val) return [];
+    .transform((val): string[] | undefined => {
+      if (!val) return undefined;
       try {
         const parsed = JSON.parse(val);
-        return Array.isArray(parsed) ? parsed : [];
+        return Array.isArray(parsed) && parsed.length > 0 ? parsed : undefined;
       } catch {
-        return [];
+        return undefined;
       }
     }),
 
