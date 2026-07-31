@@ -1,78 +1,94 @@
-import { AuctionsList } from '@/features/auctions-list/ui/AuctionsList';
-import { Filters } from '@/features/auctions-list/ui/Filters';
+import React, { useCallback } from 'react';
+import { useSearch, useNavigate } from '@tanstack/react-router';
+import { Filters } from '@features/auctions-list/ui/Filters';
+import type { SearchParams } from '@/features/auctions-list/model/searchSchema';
+import {
+  filtersToSearchParams,
+  searchParamsToFilters,
+} from '@/features/auctions-list/model/filter-utils';
 import type { IAuctionFilters } from '@/shared/types/api/auctions';
-import { useNavigate, useSearch } from '@tanstack/react-router';
-import React, { useCallback, useState } from 'react';
-
-interface SearchParams {
-  page?: number;
-  limit?: number;
-  cargo_num?: string;
-  load_city?: string;
-  unload_city?: string;
-  price_from?: string;
-  price_to?: string;
-}
+import { AuctionsList } from '@/features/auctions-list/ui/AuctionsList';
 
 export const AuctionsListPage: React.FC = () => {
-  const search = useSearch({ from: '/' }) as SearchParams;
+  const search = useSearch({ from: '/' }) as Partial<SearchParams>;
   const navigate = useNavigate();
 
   const page = search.page || 1;
-  const limit = search.limit || 3;
+  const limit = search.limit || 10;
 
-  const filters: IAuctionFilters = {
-    cargo_num: search.cargo_num || undefined,
-    load_city: search.load_city || undefined,
-    unload_city: search.unload_city || undefined,
-    price_from: search.price_from ? Number(search.price_from) : undefined,
-    price_to: search.price_to ? Number(search.price_to) : undefined,
-  };
+  const filters = searchParamsToFilters(search);
+
+  // Создаём полный объект search для навигации
+  const buildFullSearch = useCallback(
+    (overrides: Partial<SearchParams>): SearchParams => {
+      return {
+        page: overrides.page ?? search.page ?? 1,
+        limit: overrides.limit ?? search.limit ?? 10,
+        cargo_num: overrides.cargo_num ?? search.cargo_num ?? '',
+        status: overrides.status || 'Active',
+        statuses: overrides.statuses ?? search.statuses ?? [],
+        auc_type: overrides.auc_type || 'Down',
+        load_city: overrides.load_city ?? search.load_city ?? '',
+        unload_city: overrides.unload_city ?? search.unload_city ?? '',
+        date_from: overrides.date_from ?? search.date_from ?? '',
+        date_to: overrides.date_to ?? search.date_to ?? '',
+        is_available: overrides.is_available || true,
+        is_bidder: overrides.is_bidder || true,
+        price_from: overrides.price_from ?? search.price_from,
+        price_to: overrides.price_to ?? search.price_to,
+      };
+    },
+    [search],
+  );
 
   const handlePageChange = useCallback(
     (newPage: number) => {
+      const fullSearch = buildFullSearch({ page: newPage });
       navigate({
         to: '/',
-        search: { ...search, page: newPage },
+        search: fullSearch,
       });
     },
-    [navigate, search],
+    [navigate, buildFullSearch],
   );
 
   const handleFilterChange = useCallback(
     (newFilters: IAuctionFilters) => {
+      const searchParams = filtersToSearchParams(newFilters);
+      const fullSearch = buildFullSearch({
+        ...searchParams,
+        page: 1,
+      });
       navigate({
         to: '/',
-        search: {
-          page: 1,
-          cargo_num: newFilters.cargo_num || undefined,
-          load_city: newFilters.load_city || undefined,
-          unload_city: newFilters.unload_city || undefined,
-          price_from: newFilters.price_from
-            ? String(newFilters.price_from)
-            : undefined,
-          price_to: newFilters.price_to
-            ? String(newFilters.price_to)
-            : undefined,
-        },
+        search: fullSearch,
       });
     },
-    [navigate],
+    [navigate, buildFullSearch],
   );
 
   const handleResetFilters = useCallback(() => {
+    const fullSearch = buildFullSearch({
+      page: 1,
+      limit: 10,
+      cargo_num: '',
+      status: undefined,
+      statuses: [],
+      auc_type: undefined,
+      load_city: '',
+      unload_city: '',
+      date_from: '',
+      date_to: '',
+      is_available: undefined,
+      is_bidder: undefined,
+      price_from: undefined,
+      price_to: undefined,
+    });
     navigate({
       to: '/',
-      search: { page: 1 },
+      search: fullSearch,
     });
-  }, [navigate]);
-
-  const handleRetry = useCallback(() => {
-    navigate({
-      to: '/',
-      search: search,
-    });
-  }, [navigate, search]);
+  }, [navigate, buildFullSearch]);
 
   return (
     <>
@@ -83,7 +99,6 @@ export const AuctionsListPage: React.FC = () => {
         filters={filters}
         onPageChange={handlePageChange}
         onResetFilters={handleResetFilters}
-        onRetry={handleRetry}
       />
     </>
   );

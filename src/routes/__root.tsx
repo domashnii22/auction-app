@@ -11,7 +11,6 @@ import {
   createTheme,
 } from '@mui/material';
 
-// Настройка темы MUI
 const theme = createTheme({
   palette: {
     primary: {
@@ -36,7 +35,6 @@ export const Route = createRootRoute({
       <Box
         sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
       >
-        {/* Header */}
         <AppBar position="static" color="primary" elevation={1}>
           <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -48,7 +46,6 @@ export const Route = createRootRoute({
           </Toolbar>
         </AppBar>
 
-        {/* Основной контент */}
         <Container
           component="main"
           maxWidth="xl"
@@ -61,7 +58,6 @@ export const Route = createRootRoute({
           <Outlet />
         </Container>
 
-        {/* Footer */}
         <Box
           component="footer"
           sx={{
@@ -80,7 +76,6 @@ export const Route = createRootRoute({
         </Box>
       </Box>
 
-      {/* MUI Devtools */}
       <TanStackRouterDevtools />
     </ThemeProvider>
   ),

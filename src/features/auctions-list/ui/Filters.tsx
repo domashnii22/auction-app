@@ -1,61 +1,150 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Paper,
-  Box,
   TextField,
   Button,
   Grid,
   IconButton,
   Collapse,
   Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Switch,
+  Autocomplete,
+  type SelectChangeEvent,
   Stack,
 } from '@mui/material';
 import { FilterList } from '@mui/icons-material';
+import { cities } from '@mocks/data/cities';
+import type { IAuctionFilters } from '@/shared/types/api/auctions';
 
 interface FiltersProps {
-  onFilterChange: (filters: Record<string, any>) => void;
-  initialFilters?: Record<string, any>;
+  onFilterChange: (filters: IAuctionFilters) => void;
+  initialFilters?: Partial<IAuctionFilters>;
 }
+
+const statusOptions = [
+  { value: 'Active', label: 'Активный' },
+  { value: 'Completed', label: 'Завершён' },
+  { value: 'Cancelled', label: 'Отменён' },
+];
+
+const auctionTypeOptions = [
+  { value: 'Request', label: 'Request' },
+  { value: 'Up', label: 'Up' },
+  { value: 'Down', label: 'Down' },
+  { value: 'FixPrice', label: 'FixPrice' },
+];
 
 export const Filters: React.FC<FiltersProps> = ({
   onFilterChange,
   initialFilters = {},
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [filters, setFilters] = useState({
+
+  // ✅ Состояние со ВСЕМИ фильтрами
+  const [filters, setFilters] = useState<Partial<IAuctionFilters>>({
     cargo_num: initialFilters.cargo_num || '',
+    status: initialFilters.status,
+    statuses: initialFilters.statuses || [],
+    auc_type: initialFilters.auc_type,
     load_city: initialFilters.load_city || '',
     unload_city: initialFilters.unload_city || '',
-    price_from: initialFilters.price_from || '',
-    price_to: initialFilters.price_to || '',
+    date_from: initialFilters.date_from || '',
+    date_to: initialFilters.date_to || '',
+    is_available: initialFilters.is_available || false,
+    is_bidder: initialFilters.is_bidder || false,
+    price_from: initialFilters.price_from,
+    price_to: initialFilters.price_to,
   });
 
-  const handleChange =
-    (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Синхронизация с initialFilters
+  useEffect(() => {
+    setFilters({
+      cargo_num: initialFilters.cargo_num || '',
+      status: initialFilters.status,
+      statuses: initialFilters.statuses || [],
+      auc_type: initialFilters.auc_type,
+      load_city: initialFilters.load_city || '',
+      unload_city: initialFilters.unload_city || '',
+      date_from: initialFilters.date_from || '',
+      date_to: initialFilters.date_to || '',
+      is_available: initialFilters.is_available || false,
+      is_bidder: initialFilters.is_bidder || false,
+      price_from: initialFilters.price_from,
+      price_to: initialFilters.price_to,
+    });
+  }, [initialFilters]);
+
+  const handleTextChange =
+    (field: keyof IAuctionFilters) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       const newFilters = { ...filters, [field]: value };
       setFilters(newFilters);
-      onFilterChange(newFilters);
+      onFilterChange(newFilters as IAuctionFilters);
     };
 
+  const handleSelectChange =
+    (field: keyof IAuctionFilters) => (event: SelectChangeEvent<string>) => {
+      const value = event.target.value;
+      const newFilters = { ...filters, [field]: value };
+      setFilters(newFilters);
+      onFilterChange(newFilters as IAuctionFilters);
+    };
+
+  const handleSwitchChange =
+    (field: keyof IAuctionFilters) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.checked;
+      const newFilters = { ...filters, [field]: value };
+      setFilters(newFilters);
+      onFilterChange(newFilters as IAuctionFilters);
+    };
+
+  const handleStatusesChange = (
+    _event: React.SyntheticEvent,
+    values: string[],
+  ) => {
+    const newFilters = { ...filters, statuses: values };
+    setFilters(newFilters);
+    onFilterChange(newFilters as IAuctionFilters);
+  };
+
   const handleClear = () => {
-    const emptyFilters = {
+    const emptyFilters: Partial<IAuctionFilters> = {
       cargo_num: '',
+      status: undefined,
+      statuses: [],
+      auc_type: undefined,
       load_city: '',
       unload_city: '',
-      price_from: '',
-      price_to: '',
+      date_from: '',
+      date_to: '',
+      is_available: false,
+      is_bidder: false,
+      price_from: undefined,
+      price_to: undefined,
     };
     setFilters(emptyFilters);
     onFilterChange({});
   };
 
-  const activeFiltersCount = Object.values(filters).filter(Boolean).length;
+  const activeFiltersCount = Object.values(filters).filter(
+    (value) =>
+      value !== undefined &&
+      value !== '' &&
+      value !== null &&
+      !(Array.isArray(value) && value.length === 0),
+  ).length;
 
   return (
     <Paper sx={{ p: 2, mb: 3 }}>
-      <Stack>
-        <Stack>
+      <Stack spacing={1}>
+        <Stack spacing={1}>
           <IconButton onClick={() => setIsExpanded(!isExpanded)} size="small">
             <FilterList />
           </IconButton>
@@ -84,67 +173,182 @@ export const Filters: React.FC<FiltersProps> = ({
 
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid size={{ xs: 12, sm: 4 }}>
+          {/* cargo_num — Номер заявки */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <TextField
               fullWidth
               label="Номер заявки"
               variant="outlined"
               size="small"
-              value={filters.cargo_num}
-              onChange={handleChange('cargo_num')}
+              value={filters.cargo_num || ''}
+              onChange={handleTextChange('cargo_num')}
             />
           </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
+
+          {/* status — Статус (один) */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Статус</InputLabel>
+              <Select
+                value={filters.status || ''}
+                onChange={handleSelectChange('status')}
+                label="Статус"
+              >
+                <MenuItem value="">Все</MenuItem>
+                {statusOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* statuses — Статусы (множественный) */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <Autocomplete
+              multiple
+              size="small"
+              options={statusOptions.map((s) => s.value)}
+              value={filters.statuses || []}
+              onChange={handleStatusesChange}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Статусы (множественный)"
+                  placeholder="Выберите статусы"
+                />
+              )}
+            />
+          </Grid>
+
+          {/* auc_type — Тип аукциона */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Тип аукциона</InputLabel>
+              <Select
+                value={filters.auc_type || ''}
+                onChange={handleSelectChange('auc_type')}
+                label="Тип аукциона"
+              >
+                <MenuItem value="">Все</MenuItem>
+                {auctionTypeOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          {/* load_city — Город погрузки (из мок-словаря) */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <Autocomplete
+              size="small"
+              options={cities}
+              value={filters.load_city || null}
+              onChange={(_, value) => {
+                const newFilters = { ...filters, load_city: value || '' };
+                setFilters(newFilters);
+                onFilterChange(newFilters as IAuctionFilters);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Город погрузки" />
+              )}
+            />
+          </Grid>
+
+          {/* unload_city — Город выгрузки (из мок-словаря) */}
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+            <Autocomplete
+              size="small"
+              options={cities}
+              value={filters.unload_city || null}
+              onChange={(_, value) => {
+                const newFilters = { ...filters, unload_city: value || '' };
+                setFilters(newFilters);
+                onFilterChange(newFilters as IAuctionFilters);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Город выгрузки" />
+              )}
+            />
+          </Grid>
+
+          {/* date_from — Дата погрузки от */}
+          <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
-              label="Город погрузки"
+              label="Дата от"
+              type="date"
               variant="outlined"
               size="small"
-              value={filters.load_city}
-              onChange={handleChange('load_city')}
+              value={filters.date_from || ''}
+              onChange={handleTextChange('date_from')}
             />
           </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
+
+          {/* date_to — Дата погрузки до */}
+          <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
-              label="Город выгрузки"
+              label="Дата до"
+              type="date"
               variant="outlined"
               size="small"
-              value={filters.unload_city}
-              onChange={handleChange('unload_city')}
+              value={filters.date_to || ''}
+              onChange={handleTextChange('date_to')}
             />
           </Grid>
-          <Grid size={{ xs: 6, sm: 4 }}>
+
+          {/* price_from — Цена от */}
+          <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
               label="Цена от (₽)"
               variant="outlined"
               size="small"
               type="number"
-              value={filters.price_from}
-              onChange={handleChange('price_from')}
+              value={filters.price_from || ''}
+              onChange={handleTextChange('price_from')}
             />
           </Grid>
-          <Grid size={{ xs: 6, sm: 4 }}>
+
+          {/* price_to — Цена до */}
+          <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
               label="Цена до (₽)"
               variant="outlined"
               size="small"
               type="number"
-              value={filters.price_to}
-              onChange={handleChange('price_to')}
+              value={filters.price_to || ''}
+              onChange={handleTextChange('price_to')}
             />
           </Grid>
-          <Grid size={{ xs: 12, sm: 4 }}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={() => onFilterChange(filters)}
-              sx={{ height: '100%' }}
-            >
-              Применить
-            </Button>
+
+          {/* is_available и is_bidder — Переключатели */}
+          <Grid size={{ xs: 12 }}>
+            <Stack spacing={1}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={filters.is_available || false}
+                    onChange={handleSwitchChange('is_available')}
+                  />
+                }
+                label="Только доступные"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={filters.is_bidder || false}
+                    onChange={handleSwitchChange('is_bidder')}
+                  />
+                }
+                label="Где я участвую"
+              />
+            </Stack>
           </Grid>
         </Grid>
       </Collapse>
