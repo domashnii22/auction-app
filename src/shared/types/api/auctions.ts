@@ -37,7 +37,17 @@ export interface IAuction {
   hideBetsHistory: boolean;
   hidePointsAddressAndContacts: boolean;
   noViewCargoPrice: boolean;
-  bets: any[];
+  bets: IBet[];
+}
+
+export interface IBet {
+  id: string;
+  price: number;
+  participant: string;
+  isWinner: boolean;
+  isCancelled: boolean;
+  cancelReason?: string;
+  createdAt: string;
 }
 
 export interface IAuctionsListResponse {
