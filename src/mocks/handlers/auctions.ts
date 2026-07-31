@@ -53,6 +53,16 @@ export const auctionHandlers = [
       };
     }
 
+    if (filters.auc_type) {
+      const typeItems = result.items.filter((a) => a.type === filters.auc_type);
+
+      result = {
+        ...result,
+        items: typeItems,
+        total: typeItems.length,
+      };
+    }
+
     return HttpResponse.json(result);
   }),
 

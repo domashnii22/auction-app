@@ -43,9 +43,11 @@ export class AuctionStore {
       if (filters.is_bidder === true) {
         items = items.filter((a) => a.trading.myBet !== undefined);
       }
-
       if (filters.is_available === true) {
         items = items.filter((a) => a.trading.canSetBet === true);
+      }
+      if (filters.auc_type) {
+        items = items.filter((a) => a.type === filters.auc_type);
       }
     }
 
