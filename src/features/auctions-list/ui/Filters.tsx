@@ -20,6 +20,7 @@ import {
 import { FilterList } from '@mui/icons-material';
 import { cities } from '@mocks/data/cities';
 import type { SearchParams } from '../model/searchSchema';
+import type { StatusValues, TypeValues } from '@/shared/types/api/auctions';
 
 export type SearchFilters = Omit<SearchParams, 'page' | 'limit'>;
 
@@ -29,17 +30,17 @@ interface FiltersProps {
   filters: SearchFilters;
 }
 
-const statusOptions = [
+const statusOptions: Array<{ value: StatusValues; label: string }> = [
   { value: 'Active', label: 'Активный' },
   { value: 'Completed', label: 'Завершён' },
   { value: 'Cancelled', label: 'Отменён' },
 ];
 
-const auctionTypeOptions = [
-  { value: 'Request', label: 'Request' },
-  { value: 'Up', label: 'Up' },
-  { value: 'Down', label: 'Down' },
-  { value: 'FixPrice', label: 'FixPrice' },
+const auctionTypeOptions: Array<{ value: TypeValues; label: string }> = [
+  { value: 'Request', label: 'Запрос' },
+  { value: 'Up', label: 'Повышение' },
+  { value: 'Down', label: 'Понижение' },
+  { value: 'FixPrice', label: 'Фиксированная цена' },
 ];
 
 export const Filters: React.FC<FiltersProps> = ({
@@ -49,22 +50,21 @@ export const Filters: React.FC<FiltersProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // ✅ Все обработчики напрямую вызывают onFilterChange
   const handleTextChange =
-    (field: keyof SearchParams) =>
+    (field: keyof SearchFilters) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       onFilterChange({ ...filters, [field]: value || undefined });
     };
 
   const handleSelectChange =
-    (field: keyof SearchParams) => (event: SelectChangeEvent<string>) => {
+    (field: keyof SearchFilters) => (event: SelectChangeEvent<string>) => {
       const value = event.target.value;
       onFilterChange({ ...filters, [field]: value || undefined });
     };
 
   const handleSwitchChange =
-    (field: keyof SearchParams) =>
+    (field: keyof SearchFilters) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.checked;
       onFilterChange({ ...filters, [field]: value });
@@ -78,7 +78,7 @@ export const Filters: React.FC<FiltersProps> = ({
   };
 
   const handleCityChange =
-    (field: keyof SearchParams) => (_: any, value: string | null) => {
+    (field: keyof SearchFilters) => (_: any, value: string | null) => {
       onFilterChange({ ...filters, [field]: value || undefined });
     };
 
@@ -89,6 +89,8 @@ export const Filters: React.FC<FiltersProps> = ({
       value !== null &&
       !(Array.isArray(value) && value.length === 0),
   ).length;
+
+  console.log(filters.statuses);
 
   return (
     <Paper sx={{ p: 2, mb: 3 }}>
@@ -122,7 +124,6 @@ export const Filters: React.FC<FiltersProps> = ({
 
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          {/* cargo_num — Номер заявки */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <TextField
               fullWidth
@@ -134,7 +135,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* status — Статус (один) */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Статус</InputLabel>
@@ -153,12 +153,14 @@ export const Filters: React.FC<FiltersProps> = ({
             </FormControl>
           </Grid>
 
-          {/* statuses — Статусы (множественный) */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Autocomplete
               multiple
               size="small"
               options={statusOptions.map((s) => s.value)}
+              getOptionLabel={(option) =>
+                statusOptions.find((s) => s.value === option)?.label || option
+              }
               value={filters.statuses || []}
               onChange={handleStatusesChange}
               renderInput={(params) => (
@@ -171,7 +173,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* auc_type — Тип аукциона */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Тип аукциона</InputLabel>
@@ -190,7 +191,6 @@ export const Filters: React.FC<FiltersProps> = ({
             </FormControl>
           </Grid>
 
-          {/* load_city — Город погрузки */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Autocomplete
               size="small"
@@ -203,7 +203,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* unload_city — Город выгрузки */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Autocomplete
               size="small"
@@ -216,7 +215,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* date_from — Дата погрузки от */}
           <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
@@ -230,7 +228,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* date_to — Дата погрузки до */}
           <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
@@ -244,7 +241,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* price_from — Цена от */}
           <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
@@ -257,7 +253,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* price_to — Цена до */}
           <Grid size={{ xs: 6, sm: 3, md: 3 }}>
             <TextField
               fullWidth
@@ -270,7 +265,6 @@ export const Filters: React.FC<FiltersProps> = ({
             />
           </Grid>
 
-          {/* is_available и is_bidder — Переключатели */}
           <Grid size={{ xs: 12 }}>
             <Stack direction="row" spacing={2}>
               <FormControlLabel
