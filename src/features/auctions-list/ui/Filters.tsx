@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Paper,
   TextField,
@@ -19,11 +19,14 @@ import {
 } from '@mui/material';
 import { FilterList } from '@mui/icons-material';
 import { cities } from '@mocks/data/cities';
-import type { IAuctionFilters } from '@/shared/types/api/auctions';
+import type { SearchParams } from '../model/searchSchema';
+
+export type SearchFilters = Omit<SearchParams, 'page' | 'limit'>;
 
 interface FiltersProps {
-  onFilterChange: (filters: IAuctionFilters) => void;
-  initialFilters?: Partial<IAuctionFilters>;
+  onFilterChange: (filters: SearchFilters) => void;
+  onResetFilters: () => void;
+  filters: SearchFilters;
 }
 
 const statusOptions = [
@@ -41,97 +44,43 @@ const auctionTypeOptions = [
 
 export const Filters: React.FC<FiltersProps> = ({
   onFilterChange,
-  initialFilters = {},
+  onResetFilters,
+  filters,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // ✅ Состояние со ВСЕМИ фильтрами
-  const [filters, setFilters] = useState<Partial<IAuctionFilters>>({
-    cargo_num: initialFilters.cargo_num || '',
-    status: initialFilters.status,
-    statuses: initialFilters.statuses || [],
-    auc_type: initialFilters.auc_type,
-    load_city: initialFilters.load_city || '',
-    unload_city: initialFilters.unload_city || '',
-    date_from: initialFilters.date_from || '',
-    date_to: initialFilters.date_to || '',
-    is_available: initialFilters.is_available || false,
-    is_bidder: initialFilters.is_bidder || false,
-    price_from: initialFilters.price_from,
-    price_to: initialFilters.price_to,
-  });
-
-  // Синхронизация с initialFilters
-  useEffect(() => {
-    setFilters({
-      cargo_num: initialFilters.cargo_num || '',
-      status: initialFilters.status,
-      statuses: initialFilters.statuses || [],
-      auc_type: initialFilters.auc_type,
-      load_city: initialFilters.load_city || '',
-      unload_city: initialFilters.unload_city || '',
-      date_from: initialFilters.date_from || '',
-      date_to: initialFilters.date_to || '',
-      is_available: initialFilters.is_available || false,
-      is_bidder: initialFilters.is_bidder || false,
-      price_from: initialFilters.price_from,
-      price_to: initialFilters.price_to,
-    });
-  }, [initialFilters]);
-
+  // ✅ Все обработчики напрямую вызывают onFilterChange
   const handleTextChange =
-    (field: keyof IAuctionFilters) =>
+    (field: keyof SearchParams) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      const newFilters = { ...filters, [field]: value };
-      setFilters(newFilters);
-      onFilterChange(newFilters as IAuctionFilters);
+      onFilterChange({ ...filters, [field]: value || undefined });
     };
 
   const handleSelectChange =
-    (field: keyof IAuctionFilters) => (event: SelectChangeEvent<string>) => {
+    (field: keyof SearchParams) => (event: SelectChangeEvent<string>) => {
       const value = event.target.value;
-      const newFilters = { ...filters, [field]: value };
-      setFilters(newFilters);
-      onFilterChange(newFilters as IAuctionFilters);
+      onFilterChange({ ...filters, [field]: value || undefined });
     };
 
   const handleSwitchChange =
-    (field: keyof IAuctionFilters) =>
+    (field: keyof SearchParams) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.checked;
-      const newFilters = { ...filters, [field]: value };
-      setFilters(newFilters);
-      onFilterChange(newFilters as IAuctionFilters);
+      onFilterChange({ ...filters, [field]: value });
     };
 
   const handleStatusesChange = (
     _event: React.SyntheticEvent,
     values: string[],
   ) => {
-    const newFilters = { ...filters, statuses: values };
-    setFilters(newFilters);
-    onFilterChange(newFilters as IAuctionFilters);
+    onFilterChange({ ...filters, statuses: values });
   };
 
-  const handleClear = () => {
-    const emptyFilters: Partial<IAuctionFilters> = {
-      cargo_num: '',
-      status: undefined,
-      statuses: [],
-      auc_type: undefined,
-      load_city: '',
-      unload_city: '',
-      date_from: '',
-      date_to: '',
-      is_available: false,
-      is_bidder: false,
-      price_from: undefined,
-      price_to: undefined,
+  const handleCityChange =
+    (field: keyof SearchParams) => (_: any, value: string | null) => {
+      onFilterChange({ ...filters, [field]: value || undefined });
     };
-    setFilters(emptyFilters);
-    onFilterChange({});
-  };
 
   const activeFiltersCount = Object.values(filters).filter(
     (value) =>
@@ -165,7 +114,7 @@ export const Filters: React.FC<FiltersProps> = ({
           )}
         </Stack>
         {activeFiltersCount > 0 && (
-          <Button variant="text" size="small" onClick={handleClear}>
+          <Button variant="text" size="small" onClick={onResetFilters}>
             Очистить все
           </Button>
         )}
@@ -241,34 +190,26 @@ export const Filters: React.FC<FiltersProps> = ({
             </FormControl>
           </Grid>
 
-          {/* load_city — Город погрузки (из мок-словаря) */}
+          {/* load_city — Город погрузки */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Autocomplete
               size="small"
               options={cities}
               value={filters.load_city || null}
-              onChange={(_, value) => {
-                const newFilters = { ...filters, load_city: value || '' };
-                setFilters(newFilters);
-                onFilterChange(newFilters as IAuctionFilters);
-              }}
+              onChange={handleCityChange('load_city')}
               renderInput={(params) => (
                 <TextField {...params} label="Город погрузки" />
               )}
             />
           </Grid>
 
-          {/* unload_city — Город выгрузки (из мок-словаря) */}
+          {/* unload_city — Город выгрузки */}
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Autocomplete
               size="small"
               options={cities}
               value={filters.unload_city || null}
-              onChange={(_, value) => {
-                const newFilters = { ...filters, unload_city: value || '' };
-                setFilters(newFilters);
-                onFilterChange(newFilters as IAuctionFilters);
-              }}
+              onChange={handleCityChange('unload_city')}
               renderInput={(params) => (
                 <TextField {...params} label="Город выгрузки" />
               )}
@@ -285,6 +226,7 @@ export const Filters: React.FC<FiltersProps> = ({
               size="small"
               value={filters.date_from || ''}
               onChange={handleTextChange('date_from')}
+              slotProps={{ inputLabel: { shrink: true } }}
             />
           </Grid>
 
@@ -298,6 +240,7 @@ export const Filters: React.FC<FiltersProps> = ({
               size="small"
               value={filters.date_to || ''}
               onChange={handleTextChange('date_to')}
+              slotProps={{ inputLabel: { shrink: true } }}
             />
           </Grid>
 
@@ -329,7 +272,7 @@ export const Filters: React.FC<FiltersProps> = ({
 
           {/* is_available и is_bidder — Переключатели */}
           <Grid size={{ xs: 12 }}>
-            <Stack spacing={1}>
+            <Stack direction="row" spacing={2}>
               <FormControlLabel
                 control={
                   <Switch

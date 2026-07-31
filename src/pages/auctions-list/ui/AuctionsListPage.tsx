@@ -1,36 +1,34 @@
 import React, { useCallback } from 'react';
 import { useSearch, useNavigate } from '@tanstack/react-router';
 import { Filters } from '@features/auctions-list/ui/Filters';
-import { searchParamsToFilters } from '@/features/auctions-list/model/filter-utils';
-import { AuctionsList } from '@/features/auctions-list/ui/AuctionsList';
 import { PAGINATION } from '@/shared/config/pagination';
 import type { SearchParams } from '@/features/auctions-list/model/searchSchema';
 
 export const AuctionsListPage: React.FC = () => {
-  const search = useSearch({ from: '/' });
+  const search = useSearch({ from: '/' }) as SearchParams;
   const navigate = useNavigate();
 
-  const filters = searchParamsToFilters(search);
+  const { page, limit, ...filters } = search;
 
   const handlePageChange = useCallback(
     (newPage: number) => {
       navigate({
         to: '/',
-        search: { ...search, page: newPage },
+        search: { ...search, page: newPage } as SearchParams,
       });
     },
     [navigate, search],
   );
 
   const handleFilterChange = useCallback(
-    (newFilters: SearchParams) => {
+    (newFilters: Partial<SearchParams>) => {
       navigate({
         to: '/',
         search: {
           ...search,
           ...newFilters,
           page: PAGINATION.DEFAULT_PAGE,
-        },
+        } as SearchParams,
       });
     },
     [navigate, search],
@@ -40,11 +38,11 @@ export const AuctionsListPage: React.FC = () => {
     navigate({
       to: '/',
       search: {
-        page: 1,
-        limit: 10,
+        page: PAGINATION.DEFAULT_PAGE,
+        limit: PAGINATION.DEFAULT_LIMIT,
         cargo_num: undefined,
         status: undefined,
-        statuses: [],
+        statuses: undefined,
         auc_type: undefined,
         load_city: undefined,
         unload_city: undefined,
@@ -60,14 +58,18 @@ export const AuctionsListPage: React.FC = () => {
 
   return (
     <>
-      <Filters onFilterChange={handleFilterChange} initialFilters={filters} />
-      <AuctionsList
+      <Filters
+        onFilterChange={handleFilterChange}
+        filters={search}
+        onResetFilters={handleResetFilters}
+      />
+      {/* <AuctionsList
         page={search.page}
         limit={search.limit}
         filters={filters}
         onPageChange={handlePageChange}
         onResetFilters={handleResetFilters}
-      />
+      /> */}
     </>
   );
 };
