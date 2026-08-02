@@ -5,10 +5,7 @@ import {
   type SearchFilters,
 } from '@features/auctions-list/ui/Filters';
 import { PAGINATION } from '@/shared/config/pagination';
-import {
-  getDefaultSearchParams,
-  type SearchParams,
-} from '@/features/auctions-list/model/searchSchema';
+import { getDefaultSearchParams } from '@/features/auctions-list/model/searchSchema';
 import { AuctionsList } from '@/features/auctions-list/ui/AuctionsList';
 
 export const AuctionsListPage: React.FC = () => {
@@ -16,6 +13,8 @@ export const AuctionsListPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { page, limit, ...filters } = search;
+
+  console.log(filters.statuses);
 
   const handlePageChange = useCallback(
     (newPage: number) => {
@@ -29,23 +28,17 @@ export const AuctionsListPage: React.FC = () => {
 
   const handleFilterChange = useCallback(
     (newFilters: SearchFilters) => {
-      const serializedFilters = {
-        ...newFilters,
-        statuses: newFilters.statuses?.length
-          ? JSON.stringify(newFilters.statuses)
-          : undefined,
-      };
-
       navigate({
         to: '/',
-        search: {
-          ...search,
-          ...serializedFilters,
+        search: (prev) => ({
+          ...prev,
+          ...newFilters,
           page: PAGINATION.DEFAULT_PAGE,
-        } as SearchParams,
+          limit: PAGINATION.DEFAULT_LIMIT,
+        }),
       });
     },
-    [navigate, search],
+    [navigate],
   );
 
   const handleResetFilters = useCallback(() => {

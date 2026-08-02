@@ -1,5 +1,4 @@
 import { PAGINATION } from '@/shared/config/pagination';
-import type { StatusValues } from '@/shared/types/api/auctions';
 import { z } from 'zod';
 
 export const searchSchema = z.object({
@@ -31,24 +30,20 @@ export const searchSchema = z.object({
     .catch(undefined),
 
   statuses: z
-    .string()
-    .optional()
-    .default('')
-    .catch('')
-    .transform((val): StatusValues[] | undefined => {
-      if (!val) return undefined;
-      try {
-        const parsed = JSON.parse(val);
-        if (!Array.isArray(parsed) || parsed.length === 0) return undefined;
-
-        const validStatuses = parsed.filter((s) =>
-          ['Active', 'Completed', 'Cancelled'].includes(s),
-        );
-        return validStatuses.length > 0 ? validStatuses : undefined;
-      } catch {
-        return undefined;
+    .preprocess((val) => {
+      if (!val) return [];
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string') {
+        try {
+          const parsed = JSON.parse(val);
+          return Array.isArray(parsed) ? parsed : [val];
+        } catch {
+          return val.includes(',') ? val.split(',') : [val];
+        }
       }
-    }),
+      return [];
+    }, z.array(z.string()))
+    .optional(),
 
   auc_type: z
     .enum(['Request', 'Up', 'Down', 'FixPrice'])

@@ -20,7 +20,7 @@ import {
 import { FilterList } from '@mui/icons-material';
 import { cities } from '@mocks/data/cities';
 import type { SearchParams } from '../model/searchSchema';
-import type { StatusValues, TypeValues } from '@/shared/types/api/auctions';
+import type { TypeValues } from '@/shared/types/api/auctions';
 
 export type SearchFilters = Omit<SearchParams, 'page' | 'limit'>;
 
@@ -30,7 +30,7 @@ interface FiltersProps {
   filters: SearchFilters;
 }
 
-const STATUS_OPTIONS: Array<{ value: StatusValues; label: string }> = [
+const STATUS_OPTIONS: Array<{ value: string; label: string }> = [
   { value: 'Active', label: 'Активный' },
   { value: 'Completed', label: 'Завершён' },
   { value: 'Cancelled', label: 'Отменён' },
@@ -72,7 +72,7 @@ export const Filters: React.FC<FiltersProps> = ({
 
   const handleStatusesChange = (
     _event: React.SyntheticEvent,
-    values: StatusValues[],
+    values: string[],
   ) => {
     onFilterChange({ ...filters, statuses: values });
   };
