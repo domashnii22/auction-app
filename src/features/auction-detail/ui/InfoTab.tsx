@@ -63,31 +63,43 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Статус аукциона
-                </Typography>
-                <Chip
-                  label={STATUS_LABELS[auction.status]}
-                  color={STATUS_COLORS[auction.status]}
-                  size="small"
-                  sx={{ mt: 0.5 }}
-                />
+                <Stack
+                  direction={'row'}
+                  spacing={1}
+                  style={{ alignItems: 'center' }}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    Статус аукциона
+                  </Typography>
+                  <Chip
+                    label={STATUS_LABELS[auction.status]}
+                    color={STATUS_COLORS[auction.status]}
+                    size="small"
+                    sx={{ mt: 0.5 }}
+                  />
+                </Stack>
               </Grid>
 
               <Grid size={{ xs: 12, sm: 6 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Ваш торговый статус
-                </Typography>
-                <Chip
-                  label={
-                    USER_STATUS_LABELS[auction.trading.userStatus] ||
-                    auction.trading.userStatus
-                  }
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                  sx={{ mt: 0.5 }}
-                />
+                <Stack
+                  direction={'row'}
+                  spacing={1}
+                  style={{ alignItems: 'center' }}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    Ваш торговый статус
+                  </Typography>
+                  <Chip
+                    label={
+                      USER_STATUS_LABELS[auction.trading.userStatus] ||
+                      auction.trading.userStatus
+                    }
+                    color="primary"
+                    variant="outlined"
+                    size="small"
+                    sx={{ mt: 0.5 }}
+                  />
+                </Stack>
               </Grid>
             </Grid>
           </Paper>
@@ -98,7 +110,11 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
             </Typography>
             <Divider sx={{ mb: 2 }} />
 
-            <Stack spacing={1}>
+            <Stack
+              direction={'row'}
+              spacing={1}
+              style={{ alignItems: 'center' }}
+            >
               <Business fontSize="small" color="action" />
               <Typography variant="body1">{auction.organizer.name}</Typography>
             </Stack>
@@ -106,17 +122,25 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
             {showContacts && (
               <Stack spacing={1}>
                 {auction.organizer.contacts?.phone && (
-                  <Stack spacing={1}>
+                  <Stack
+                    direction={'row'}
+                    spacing={1}
+                    style={{ alignItems: 'center' }}
+                  >
                     <Phone fontSize="small" color="action" />
-                    <Typography variant="body2">
+                    <Typography variant="body1">
                       {auction.organizer.contacts.phone}
                     </Typography>
                   </Stack>
                 )}
                 {auction.organizer.contacts?.email && (
-                  <Stack spacing={1}>
+                  <Stack
+                    direction={'row'}
+                    spacing={1}
+                    style={{ alignItems: 'center' }}
+                  >
                     <Email fontSize="small" color="action" />
-                    <Typography variant="body2">
+                    <Typography variant="body1">
                       {auction.organizer.contacts.email}
                     </Typography>
                   </Stack>
@@ -137,7 +161,11 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
             </Typography>
             <Divider sx={{ mb: 2 }} />
 
-            <Stack spacing={1}>
+            <Stack
+              direction={'row'}
+              spacing={1}
+              style={{ alignItems: 'center' }}
+            >
               <LocationOn color="primary" />
               <Typography variant="body1">
                 {auction.route.from} → {auction.route.to}
@@ -146,9 +174,6 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
 
             {!hidePointsAddressAndContacts && (
               <Stack spacing={1}>
-                <Typography variant="caption" color="text.secondary">
-                  Точки маршрута
-                </Typography>
                 <Alert severity="info" sx={{ mt: 1 }}>
                   Погрузка: {auction.route.from}
                   <br />
