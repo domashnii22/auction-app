@@ -14,8 +14,6 @@ export const AuctionsListPage: React.FC = () => {
 
   const { page, limit, ...filters } = search;
 
-  console.log(filters.statuses);
-
   const handlePageChange = useCallback(
     (newPage: number) => {
       navigate({
