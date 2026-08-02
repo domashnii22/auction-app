@@ -2,6 +2,7 @@ import type {
   IAuction,
   IAuctionsListRequest,
   IAuctionsListResponse,
+  IBet,
 } from '../types/api/auctions';
 
 const API_BASE_URL = '/api';
@@ -39,7 +40,7 @@ export const auctionApi = {
     });
   },
 
-  getBets: (id: string): Promise<any> => {
+  getBets: (id: string): Promise<IBet[]> => {
     return apiClient(`/auctions/${id}/bets`, {
       method: 'GET',
     });
