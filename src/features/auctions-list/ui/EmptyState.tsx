@@ -20,14 +20,18 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         bgcolor: 'background.default',
       }}
     >
-      <Stack>
+      <Stack style={{ alignItems: 'center' }}>
         {hasFilters ? (
           <Filter
             sx={{ fontSize: 64, color: 'text.secondary', opacity: 0.5 }}
           />
         ) : (
           <SearchOff
-            sx={{ fontSize: 64, color: 'text.secondary', opacity: 0.5 }}
+            sx={{
+              fontSize: 64,
+              color: 'text.secondary',
+              opacity: 0.5,
+            }}
           />
         )}
       </Stack>
