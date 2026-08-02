@@ -10,17 +10,12 @@ import {
   CircularProgress,
   Alert,
   Button,
-  Chip,
   IconButton,
   Stack,
 } from '@mui/material';
 import { ArrowBack, Info, Gavel } from '@mui/icons-material';
 import { useAuctionDetail } from '@/features/auction-detail/model/useAuctionDetail';
 import { getDefaultSearchParams } from '@/features/auctions-list/model/searchSchema';
-import {
-  STATUS_COLORS,
-  STATUS_LABELS,
-} from '@/features/auctions-list/ui/AuctionCard';
 import { InfoTab } from '@/features/auction-detail/ui/InfoTab';
 import { BetsTab } from '@/features/auction-detail/ui/BetsTab';
 
@@ -82,24 +77,13 @@ export const AuctionDetailPage: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Stack spacing={1}>
+      <Stack direction={'row'} spacing={3} style={{ paddingBottom: 20 }}>
         <IconButton onClick={handleGoBack} size="small">
           <ArrowBack />
         </IconButton>
         <Typography variant="h4" component="h1">
           Аукцион #{auction.cargoNumber}
         </Typography>
-        <Chip
-          label={STATUS_LABELS[auction.status]}
-          color={STATUS_COLORS[auction.status]}
-          size="medium"
-        />
-        <Chip
-          label={auction.type}
-          color="primary"
-          variant="outlined"
-          size="medium"
-        />
       </Stack>
 
       <Paper>
