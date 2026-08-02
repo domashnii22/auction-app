@@ -13,6 +13,7 @@ import {
   Alert,
   CircularProgress,
   Stack,
+  Tooltip,
 } from '@mui/material';
 import type { IAuction } from '@/shared/types/api/auctions';
 import { useBets } from '../model/useBets';
@@ -22,7 +23,7 @@ interface BetsTabProps {
 }
 
 export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
-  const { data: bets, isLoading, error } = useBets(auction.id);
+  const { data, isLoading, error } = useBets(auction.id);
 
   if (auction.hideBetsHistory) {
     return <Alert severity="info">История ставок скрыта организатором</Alert>;
@@ -44,7 +45,7 @@ export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
     );
   }
 
-  if (!bets || bets.length === 0) {
+  if (!data || data.bets.length === 0) {
     return (
       <Stack>
         <Typography variant="body1" color="text.secondary">
@@ -57,7 +58,7 @@ export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
   return (
     <Box>
       <Typography variant="subtitle1" gutterBottom>
-        Всего ставок: {bets.length}
+        Всего ставок: {data.bets.length}
       </Typography>
 
       <TableContainer component={Paper} variant="outlined">
@@ -82,7 +83,7 @@ export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {bets.map((bet, index) => (
+            {data.bets.map((bet, index) => (
               <TableRow key={bet.id} hover>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>
@@ -90,11 +91,13 @@ export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
                 </TableCell>
                 <TableCell>{bet.participant}</TableCell>
                 <TableCell>
-                  {new Date(bet.createdAt).toLocaleString('ru-RU')}
+                  {new Date(bet.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
                   {bet.isCancelled ? (
-                    <Chip label="Отменена" color="error" size="small" />
+                    <Tooltip title={bet.cancelReason}>
+                      <Chip label="Отменена" color="error" size="small" />
+                    </Tooltip>
                   ) : bet.isWinner ? (
                     <Chip label="Победитель" color="success" size="small" />
                   ) : (
@@ -104,15 +107,6 @@ export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
                       size="small"
                       variant="outlined"
                     />
-                  )}
-                  {bet.cancelReason && (
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      sx={{ display: 'block', mt: 0.5 }}
-                    >
-                      {bet.cancelReason}
-                    </Typography>
                   )}
                 </TableCell>
               </TableRow>
