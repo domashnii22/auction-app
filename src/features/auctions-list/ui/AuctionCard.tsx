@@ -109,18 +109,28 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
     >
       <CardContent>
         <Stack spacing={1}>
-          <Box>
+          <Stack spacing={1}>
             <Typography variant="h6" component="div">
               Заявка #{auction.cargoNumber}
             </Typography>
-            <Chip
-              label={TYPE_LABELS[auction.type]}
-              size="small"
-              variant="outlined"
-              icon={<TypeIcon />}
-              sx={{ mt: 0.5 }}
-            />
-          </Box>
+            <Stack direction="row" spacing={1}>
+              <Chip
+                label={TYPE_LABELS[auction.type]}
+                size="small"
+                variant="outlined"
+                icon={<TypeIcon />}
+                sx={{ mt: 0.5 }}
+              />
+              <Chip
+                label={
+                  auction.trading.myBet ? 'Моя ставка есть' : 'Моей ставки нет'
+                }
+                color={auction.trading.myBet ? 'success' : 'error'}
+                size="small"
+                variant="outlined"
+              />
+            </Stack>
+          </Stack>
           <Stack direction="row" spacing={1}>
             <Chip
               label={STATUS_LABELS[auction.status]}
@@ -130,14 +140,6 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
             <Chip
               label={USER_STATUS_LABELS[auction.trading.userStatus]}
               color={USER_STATUS_COLORS[auction.trading.userStatus]}
-              size="small"
-              variant="outlined"
-            />
-            <Chip
-              label={
-                auction.trading.myBet ? 'Моя ставка есть' : 'Моей ставки нет'
-              }
-              color={auction.trading.myBet ? 'success' : 'error'}
               size="small"
               variant="outlined"
             />
