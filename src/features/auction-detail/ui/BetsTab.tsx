@@ -69,10 +69,16 @@ export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
                 <strong>№</strong>
               </TableCell>
               <TableCell>
-                <strong>Цена</strong>
+                <strong>Цена без НДС</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Цена с НДС</strong>
               </TableCell>
               <TableCell>
                 <strong>Участник</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Место в рейтинге</strong>
               </TableCell>
               <TableCell>
                 <strong>Дата</strong>
@@ -89,7 +95,28 @@ export const BetsTab: React.FC<BetsTabProps> = ({ auction }) => {
                 <TableCell>
                   <Typography>{bet.price.toLocaleString()} ₽</Typography>
                 </TableCell>
-                <TableCell>{bet.participant}</TableCell>
+                <TableCell>
+                  <Typography>
+                    {(bet.price * 1.2).toLocaleString()} ₽
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  {bet.participant === 'me' ? 'Вы' : bet.participant}
+                </TableCell>
+                <TableCell>
+                  {bet.rating ? (
+                    <Chip
+                      label={`#${bet.rating}`}
+                      size="small"
+                      color={bet.rating === 1 ? 'success' : 'default'}
+                      variant={bet.rating === 1 ? 'filled' : 'outlined'}
+                    />
+                  ) : (
+                    <Typography variant="caption" color="text.secondary">
+                      —
+                    </Typography>
+                  )}
+                </TableCell>
                 <TableCell>
                   {new Date(bet.createdAt).toLocaleDateString()}
                 </TableCell>
