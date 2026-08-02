@@ -111,6 +111,30 @@ export const auctionHandlers = [
       };
     }
 
+    if (filters.price_from) {
+      const priceFrom = filters.price_from;
+      const priceItems = result.items.filter(
+        (a) => a.currentPrice >= priceFrom,
+      );
+
+      result = {
+        ...result,
+        items: priceItems,
+        total: priceItems.length,
+      };
+    }
+
+    if (filters.price_to) {
+      const priceTo = filters.price_to;
+      const priceItems = result.items.filter((a) => a.currentPrice <= priceTo);
+
+      result = {
+        ...result,
+        items: priceItems,
+        total: priceItems.length,
+      };
+    }
+
     return HttpResponse.json(result);
   }),
 

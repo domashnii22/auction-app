@@ -65,6 +65,14 @@ export class AuctionStore {
       if (filters.date_to) {
         items = items.filter((a) => a.dates.loading <= filters.date_to!);
       }
+      if (filters.price_from) {
+        const priceFrom = filters.price_from;
+        items = items.filter((a) => a.currentPrice >= priceFrom);
+      }
+      if (filters.price_to) {
+        const priceTo = filters.price_to;
+        items = items.filter((a) => a.currentPrice <= priceTo);
+      }
     }
 
     const total = items.length;
