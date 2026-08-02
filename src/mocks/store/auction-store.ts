@@ -73,6 +73,9 @@ export class AuctionStore {
         const priceTo = filters.price_to;
         items = items.filter((a) => a.currentPrice <= priceTo);
       }
+      if (filters.statuses && filters.statuses.length > 0) {
+        items = items.filter((a) => filters.statuses!.includes(a.status));
+      }
     }
 
     const total = items.length;

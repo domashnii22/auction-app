@@ -1,6 +1,9 @@
 import { http, HttpResponse } from 'msw';
 import { auctionStore } from '../store/auction-store';
-import type { IAuctionFilters } from '@/shared/types/api/auctions';
+import type {
+  IAuctionFilters,
+  StatusValues,
+} from '@/shared/types/api/auctions';
 
 export const auctionHandlers = [
   http.get('/api/auctions/:id', ({ params }) => {
@@ -132,6 +135,19 @@ export const auctionHandlers = [
         ...result,
         items: priceItems,
         total: priceItems.length,
+      };
+    }
+
+    if (filters.statuses && filters.statuses.length > 0) {
+      const statuses = filters.statuses as StatusValues[];
+      const statusesItems = result.items.filter((a) =>
+        statuses.includes(a.status as StatusValues),
+      );
+
+      result = {
+        ...result,
+        items: statusesItems,
+        total: statusesItems.length,
       };
     }
 
