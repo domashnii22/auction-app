@@ -133,6 +133,14 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
               size="small"
               variant="outlined"
             />
+            <Chip
+              label={
+                auction.trading.myBet ? 'Моя ставка есть' : 'Моей ставки нет'
+              }
+              color={auction.trading.myBet ? 'success' : 'error'}
+              size="small"
+              variant="outlined"
+            />
           </Stack>
         </Stack>
 
@@ -153,10 +161,17 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
         </Stack>
 
         <Stack direction={'row'} spacing={1}>
+          <CalendarToday fontSize="small" color="action" />
+          <Typography variant="body2">
+            Загрузка: {new Date(auction.dates.unloading).toLocaleDateString()}
+          </Typography>
+        </Stack>
+
+        <Stack direction={'row'} spacing={1}>
           <LocalShipping fontSize="small" color="action" />
           <Typography variant="body2">
             {auction.cargo.name} · {auction.cargo.weight}т ·{' '}
-            {auction.cargo.volume}м³
+            {auction.cargo.volume}м³ · {auction.cargo.bodyType}
           </Typography>
         </Stack>
 
@@ -168,9 +183,15 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
               Текущая цена: {auction.currentPrice.toLocaleString()} ₽
             </Typography>
 
-            <Typography variant="caption" color="text.secondary">
-              Шаг: {auction.step} ₽
-            </Typography>
+            <Stack spacing={0.1}>
+              <Typography variant="caption" color="text.secondary">
+                Шаг: {auction.step} ₽
+              </Typography>
+
+              <Typography variant="caption" color="text.secondary">
+                Цена за км: {auction.pricePerKm} ₽
+              </Typography>
+            </Stack>
           </Stack>
 
           <Button
