@@ -59,6 +59,11 @@ export interface IAuctionsListResponse {
   totalPages: number;
 }
 
+export interface IBetsListResponse {
+  bets: IBet[];
+  total: number;
+}
+
 export interface IAuctionsListRequest {
   page: number;
   limit: number;
