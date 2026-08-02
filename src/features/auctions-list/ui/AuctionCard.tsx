@@ -172,7 +172,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
         <Stack direction={'row'} spacing={1}>
           <LocalShipping fontSize="small" color="action" />
           <Typography variant="body2">
-            {auction.cargo.name} · {auction.cargo.weight}т ·{' '}
+            {auction.cargo.name} · {auction.cargo.weight / 1000}т ·{' '}
             {auction.cargo.volume}м³ · {auction.cargo.bodyType}
           </Typography>
         </Stack>

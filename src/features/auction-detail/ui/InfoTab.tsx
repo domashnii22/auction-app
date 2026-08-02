@@ -204,7 +204,9 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
                   Вес
                 </Typography>
                 <Typography variant="body1">
-                  {noViewCargoPrice ? '***' : `${auction.cargo.weight} т`}
+                  {noViewCargoPrice
+                    ? '***'
+                    : `${auction.cargo.weight / 1000} т`}
                 </Typography>
               </Grid>
 
