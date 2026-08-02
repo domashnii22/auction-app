@@ -14,6 +14,8 @@ export const ErrorState: React.FC<ErrorStateProps> = ({ error, onRetry }) => {
         p: 4,
         borderRadius: 2,
         bgcolor: 'background.default',
+        display: 'flex',
+        justifyContent: 'center',
       }}
     >
       <Alert
