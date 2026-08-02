@@ -87,6 +87,30 @@ export const auctionHandlers = [
       };
     }
 
+    if (filters.date_from) {
+      const dateItems = result.items.filter(
+        (a) => a.dates.loading >= filters.date_from!,
+      );
+
+      result = {
+        ...result,
+        items: dateItems,
+        total: dateItems.length,
+      };
+    }
+
+    if (filters.date_to) {
+      const dateItems = result.items.filter(
+        (a) => a.dates.loading <= filters.date_to!,
+      );
+
+      result = {
+        ...result,
+        items: dateItems,
+        total: dateItems.length,
+      };
+    }
+
     return HttpResponse.json(result);
   }),
 

@@ -59,6 +59,12 @@ export class AuctionStore {
           a.route.to.toLowerCase().includes(filters.unload_city!.toLowerCase()),
         );
       }
+      if (filters.date_from) {
+        items = items.filter((a) => a.dates.loading >= filters.date_from!);
+      }
+      if (filters.date_to) {
+        items = items.filter((a) => a.dates.loading <= filters.date_to!);
+      }
     }
 
     const total = items.length;
