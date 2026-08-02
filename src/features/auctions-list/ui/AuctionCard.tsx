@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -24,6 +24,7 @@ import type {
   IAuction,
   StatusValues,
 } from '@/shared/types/api/auctions';
+import { usePrefetchAuction } from '../model/usePrefetchAuction';
 
 export const TYPE_LABELS: Record<AuctionTypesValues, string> = {
   Request: 'Запрос',
@@ -79,8 +80,13 @@ interface AuctionCardProps {
 
 export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
   const navigate = useNavigate();
+  const { prefetchAuction } = usePrefetchAuction();
 
   const TypeIcon = TYPE_ICONS[auction.type];
+
+  const handleMouseEnter = useCallback(() => {
+    prefetchAuction(auction.id);
+  }, [prefetchAuction, auction.id]);
 
   const handleCardClick = () => {
     navigate({ to: `/auctions/${auction.id}` });
@@ -98,6 +104,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
           cursor: 'pointer',
         },
       }}
+      onMouseEnter={handleMouseEnter}
       onClick={handleCardClick}
     >
       <CardContent>
