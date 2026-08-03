@@ -1,75 +1,80 @@
-# React + TypeScript + Vite
+# Грузовые аукционы — SPA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Тестовое задание для позиции Frontend Developer.
 
-Currently, two official plugins are available:
+## 📦 Стек технологий
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React** + **TypeScript**
+- **Vite** — сборка
+- **TanStack Router** — маршрутизация
+- **TanStack Query** — управление серверным состоянием
+- **React Hook Form** + **Zod** — формы и валидация
+- **MSW** — мокинг API
+- **Material UI v6** — UI-компоненты
+- **Feature-Sliced Design** — архитектура
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Запуск проекта
 
-## Expanding the ESLint configuration
+### 1. Клонирование репозитория
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+git clone <url-репозитория>
+cd auction-app
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Установка зависимостей
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
 ```
+
+### 3. Генерация дерева маршрутов
+
+Важно! TanStack Router использует генерацию маршрутов на основе файловой системы. Перед запуском необходимо сгенерировать routeTree.gen.ts:
+
+```bash
+npm run generate
+```
+
+Скрипт сканирует папку src/routes/ и создаёт файл src/routes/routeTree.gen.ts, который содержит дерево всех маршрутов приложения.
+Если изменили структуру маршрутов, то запустите генерацию заново:
+
+```bash
+npm run generate
+```
+
+### 4. Запуск в режиме разработки
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу: http://localhost:3000
+
+## 🧪 Проверка работы
+
+### 1. MSW (Mock Service Worker)
+
+При первом запуске MSW регистрирует Service Worker. В консоли должно появиться:
+[MSW] Mocking enabled.
+
+Если MSW не работает:
+
+```bash
+npm run dev
+```
+
+### 2. Проверка основных сценариев
+
+| Сценарий           | Действие                    | Ожидаемый результат                 |
+| :----------------- | :-------------------------- | :---------------------------------- |
+| Список аукционов   | Открыть                     | Отображаются карточки с аукционами  |
+| Пагинация          | Нажать на номер страницы    | Загружается следующая страница      |
+| Фильтры            | Выбрать статус, город, цену | Список фильтруется                  |
+| Prefetch           | Навести на карточку         | В Network появляется запрос деталей |
+| Детальная страница | Кликнуть на карточку        | Открывается страница с информацией  |
+| Ставки             | Перейти во вкладку "Ставки" | Отображается список ставок          |
+| Форма ставки       | Нажать "Сделать ставку"     | Открывается форма                   |
+| Успешная ставка    | Ввести цену и отправить     | Toast "Ставка успешно сделана!"     |
