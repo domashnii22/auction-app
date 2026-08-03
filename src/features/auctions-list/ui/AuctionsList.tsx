@@ -3,8 +3,8 @@ import { useAuctionsList } from '../model/useAuctionsList';
 import { Grid, Pagination, Typography, Stack } from '@mui/material';
 import { AuctionCard } from '@/widgets/auction-card/ui/AuctionCard';
 import { SkeletonList } from '../../../widgets/skeletons/SkeletonList';
-import { ErrorState } from './ErrorState';
-import { EmptyState } from './EmptyState';
+import { ErrorState } from '../../../widgets/states/ErrorState';
+import { EmptyState } from '../../../widgets/states/EmptyState';
 import type { SearchFilters } from './Filters';
 
 interface AuctionsListProps {
