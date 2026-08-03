@@ -1,16 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { initialAuctions } from './initial-data';
-import type { IAuction } from '@/shared/types/api/auctions';
-
-export interface IBet {
-  id: string;
-  price: number;
-  participant: string;
-  isWinner: boolean;
-  isCancelled: boolean;
-  cancelReason?: string;
-  createdAt: string;
-}
+import type { IAuction, IBet } from '@/shared/types/api/auctions';
 
 export class AuctionStore {
   private auctions: Map<string, IAuction> = new Map();

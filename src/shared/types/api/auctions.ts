@@ -46,7 +46,7 @@ export interface IBet {
   id: string;
   price: number;
   participant: string;
-  rating: number;
+  rating?: number;
   isWinner: boolean;
   isCancelled: boolean;
   cancelReason?: string;
