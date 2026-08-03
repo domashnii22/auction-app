@@ -5,6 +5,7 @@ import { auctionApi } from '@/shared/api/client';
 import { AUCTIONS_QUERY_KEY } from '@/features/auctions-list/model/useAuctionsList';
 import { AUCTION_DETAIL_QUERY_KEY } from '@/features/auctions-list/model/usePrefetchAuction';
 import { BETS_QUERY_KEY } from '@/features/auction-detail/model/useBets';
+import type { ApiError } from '@/shared/types/api';
 
 interface UseBetFormOptions {
   auctionId: string;
@@ -34,12 +35,15 @@ export const useBetForm = ({ auctionId, onSuccess }: UseBetFormOptions) => {
       }
     },
 
-    onError: (error: any) => {
-      if (error.status === 422) {
-        const message = error.response?.data?.message || 'Некорректная ставка';
+    onError: (error: unknown) => {
+      const apiError = error as ApiError;
+
+      if (apiError.status === 422) {
+        const message =
+          apiError.response?.data?.message || 'Некорректная ставка';
         toast.error(message);
       } else {
-        toast.error(error.message || 'Не удалось сделать ставку');
+        toast.error(apiError.message || 'Не удалось сделать ставку');
       }
     },
   });

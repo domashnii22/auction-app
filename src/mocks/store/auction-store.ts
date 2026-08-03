@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { initialAuctions } from './initial-data';
-import type { IAuction, IBet } from '@/shared/types/api/auctions';
+import type {
+  IAuction,
+  IAuctionFilters,
+  IBet,
+} from '@/shared/types/api/auctions';
 
 export class AuctionStore {
   private auctions: Map<string, IAuction> = new Map();
@@ -14,7 +18,7 @@ export class AuctionStore {
   getAuctions(
     page: number = 1,
     limit: number = 10,
-    filters?: any,
+    filters?: IAuctionFilters,
   ): {
     items: IAuction[];
     total: number;
@@ -25,7 +29,7 @@ export class AuctionStore {
 
     if (filters) {
       if (filters.cargo_num) {
-        items = items.filter((a) => a.cargoNumber.includes(filters.cargo_num));
+        items = items.filter((a) => a.cargoNumber.includes(filters.cargo_num!));
       }
       if (filters.status) {
         items = items.filter((a) => a.status === filters.status);

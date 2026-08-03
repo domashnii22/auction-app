@@ -74,7 +74,7 @@ export interface IAuctionsListRequest {
 export interface IAuctionFilters {
   cargo_num?: string;
   status?: StatusValues;
-  statuses?: string[] | [];
+  statuses?: string[];
   auc_type?: TypeValues;
   load_city?: string;
   unload_city?: string;
