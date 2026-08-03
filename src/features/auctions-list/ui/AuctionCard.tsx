@@ -4,75 +4,22 @@ import {
   CardContent,
   Typography,
   Chip,
-  Box,
   Button,
   Stack,
   Divider,
 } from '@mui/material';
-import {
-  LocationOn,
-  CalendarToday,
-  LocalShipping,
-  TrendingUp,
-  TrendingDown,
-  HelpOutlined,
-  type SvgIconComponent,
-} from '@mui/icons-material';
+import { LocationOn, CalendarToday, LocalShipping } from '@mui/icons-material';
 import { useNavigate } from '@tanstack/react-router';
-import type {
-  AuctionTypesValues,
-  IAuction,
-  StatusValues,
-} from '@/shared/types/api/auctions';
+import type { IAuction } from '@/shared/types/api/auctions';
 import { usePrefetchAuction } from '../model/usePrefetchAuction';
-
-export const TYPE_LABELS: Record<AuctionTypesValues, string> = {
-  Request: 'Запрос',
-  Up: 'Повышение',
-  Down: 'Понижение',
-  FixPrice: 'Фиксированная цена',
-};
-
-export const TYPE_ICONS: Record<AuctionTypesValues, SvgIconComponent> = {
-  Request: HelpOutlined,
-  Up: TrendingUp,
-  Down: TrendingDown,
-  FixPrice: HelpOutlined,
-};
-
-export const STATUS_LABELS: Record<StatusValues, string> = {
-  Active: 'Активный',
-  Completed: 'Завершён',
-  Cancelled: 'Отменён',
-};
-
-export const STATUS_COLORS: Record<
-  StatusValues,
-  'success' | 'default' | 'error'
-> = {
-  Active: 'success',
-  Completed: 'default',
-  Cancelled: 'error',
-};
-
-export type UserStatus = 'Leading' | 'Losing' | 'Winner' | 'NotParticipating';
-
-export const USER_STATUS_LABELS: Record<UserStatus, string> = {
-  Leading: 'Лидируете',
-  Losing: 'Отстаёте',
-  Winner: 'Победитель',
-  NotParticipating: 'Не участвуете',
-};
-
-export const USER_STATUS_COLORS: Record<
-  UserStatus,
-  'info' | 'warning' | 'success' | 'default'
-> = {
-  Leading: 'info',
-  Losing: 'warning',
-  Winner: 'success',
-  NotParticipating: 'default',
-};
+import {
+  STATUS_COLORS,
+  STATUS_LABELS,
+  TYPE_ICONS,
+  TYPE_LABELS,
+  USER_STATUS_COLORS,
+  USER_STATUS_LABELS,
+} from '@/shared/config/auctions';
 
 interface AuctionCardProps {
   auction: IAuction;

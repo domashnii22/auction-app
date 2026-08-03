@@ -2,7 +2,7 @@ export interface IAuction {
   id: string;
   cargoNumber: string;
   type: AuctionTypesValues;
-  status: 'Active' | 'Completed' | 'Cancelled';
+  status: AuctionStatusValues;
   route: {
     from: string;
     to: string;
@@ -19,7 +19,7 @@ export interface IAuction {
   trading: {
     canSetBet: boolean;
     myBet?: number;
-    userStatus: 'Leading' | 'Losing' | 'Winner' | 'NotParticipating';
+    userStatus: UserStatusValues;
     minPrice: number;
     maxPrice: number;
   };
@@ -39,8 +39,6 @@ export interface IAuction {
   noViewCargoPrice: boolean;
   bets: IBet[];
 }
-
-export type AuctionTypesValues = 'Request' | 'Up' | 'Down' | 'FixPrice';
 
 export interface IBet {
   id: string;
@@ -73,9 +71,9 @@ export interface IAuctionsListRequest {
 
 export interface IAuctionFilters {
   cargo_num?: string;
-  status?: StatusValues;
+  status?: AuctionStatusValues;
   statuses?: string[];
-  auc_type?: TypeValues;
+  auc_type?: AuctionTypesValues;
   load_city?: string;
   unload_city?: string;
   date_from?: string;
@@ -86,6 +84,9 @@ export interface IAuctionFilters {
   price_to?: number;
 }
 
-export type StatusValues = 'Active' | 'Completed' | 'Cancelled';
+export type AuctionStatusValues = 'Active' | 'Completed' | 'Cancelled';
 
-export type TypeValues = 'Request' | 'Up' | 'Down' | 'FixPrice';
+export type AuctionTypesValues = 'Request' | 'Up' | 'Down' | 'FixPrice';
+
+export type UserStatusValues =
+  'Leading' | 'Losing' | 'Winner' | 'NotParticipating';

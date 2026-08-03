@@ -20,7 +20,7 @@ import {
   STATUS_LABELS,
   TYPE_LABELS,
   USER_STATUS_LABELS,
-} from '@/features/auctions-list/ui/AuctionCard';
+} from '@/shared/config/auctions';
 
 interface InfoTabProps {
   auction: IAuction;
