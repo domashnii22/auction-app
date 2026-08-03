@@ -63,7 +63,7 @@ npm run dev
 Если MSW не работает:
 
 ```bash
-npm run dev
+npx msw init public/ --save
 ```
 
 ### 2. Проверка основных сценариев
