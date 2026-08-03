@@ -203,7 +203,7 @@ export const AuctionCard: React.FC<AuctionCardProps> = ({ auction }) => {
             disabled={!auction.trading.canSetBet}
             onClick={(e) => {
               e.stopPropagation();
-              navigate({ to: `/auctions/${auction.id}/bet-form` });
+              navigate({ to: `/bet-form/${auction.id}` });
             }}
           >
             {auction.trading.myBet ? 'Изменить ставку' : 'Сделать ставку'}

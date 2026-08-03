@@ -1,9 +1,9 @@
 import { createRoute } from '@tanstack/react-router';
-import { Route as AuctionRoute } from './$id';
+import { Route as RootRoute } from '../__root';
 import { BetFormPage } from '@/pages/bet-form/ui/BetFormPage';
 
 export const Route = createRoute({
-  getParentRoute: () => AuctionRoute,
-  path: '/bet-form',
+  getParentRoute: () => RootRoute,
+  path: '/bet-form/$id',
   component: BetFormPage,
 });

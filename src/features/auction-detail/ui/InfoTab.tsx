@@ -342,9 +342,7 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
                     color="primary"
                     fullWidth
                     disabled={!auction.trading.canSetBet}
-                    onClick={() =>
-                      navigate({ to: `/auctions/${auction.id}/bet-form` })
-                    }
+                    onClick={() => navigate({ to: `/bet-form/${auction.id}` })}
                   >
                     {auction.trading.myBet
                       ? 'Изменить ставку'

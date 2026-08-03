@@ -14,9 +14,7 @@ import { BetForm } from '@/features/bet-form/ui/BetForm';
 import { useAuctionDetail } from '@/features/auction-detail/model/useAuctionDetail';
 
 export const BetFormPage: React.FC = () => {
-  const { id } = useParams({ from: '/auctions/$id/bet-form' }) as {
-    id: string;
-  };
+  const { id } = useParams({ from: '/bet-form/$id' }) as { id: string };
   const navigate = useNavigate();
 
   const { data: auction, isLoading, error, refetch } = useAuctionDetail(id);
