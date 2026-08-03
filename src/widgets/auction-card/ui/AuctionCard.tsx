@@ -11,7 +11,7 @@ import {
 import { LocationOn, CalendarToday, LocalShipping } from '@mui/icons-material';
 import { useNavigate } from '@tanstack/react-router';
 import type { IAuction } from '@/shared/types/api/auctions';
-import { usePrefetchAuction } from '../model/usePrefetchAuction';
+import { usePrefetchAuction } from '../../../features/auctions-list/model/usePrefetchAuction';
 import {
   STATUS_COLORS,
   STATUS_LABELS,

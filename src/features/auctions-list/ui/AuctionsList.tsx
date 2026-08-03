@@ -1,8 +1,8 @@
 import React from 'react';
 import { useAuctionsList } from '../model/useAuctionsList';
 import { Grid, Pagination, Typography, Stack } from '@mui/material';
-import { AuctionCard } from '@/features/auctions-list/ui/AuctionCard';
-import { SkeletonList } from './SkeletonList';
+import { AuctionCard } from '@/widgets/auction-card/ui/AuctionCard';
+import { SkeletonList } from '../../../widgets/skeletons/SkeletonList';
 import { ErrorState } from './ErrorState';
 import { EmptyState } from './EmptyState';
 import type { SearchFilters } from './Filters';
