@@ -4,12 +4,17 @@ export const betSchema = (minPrice: number, maxPrice: number, step: number) =>
   z.object({
     price: z
       .number({
-        error: 'Введите сумму ставки',
-        message: 'Введите число',
+        message: 'Введите сумму ставки',
       })
-      .positive('Сумма должна быть больше 0')
-      .min(minPrice, `Минимальная ставка: ${minPrice.toLocaleString()} ₽`)
-      .max(maxPrice, `Максимальная ставка: ${maxPrice.toLocaleString()} ₽`)
+      .refine((val) => val > 0, {
+        message: 'Сумма должна быть больше 0',
+      })
+      .refine((val) => val >= minPrice, {
+        message: `Минимальная ставка: ${minPrice.toLocaleString()} ₽`,
+      })
+      .refine((val) => val <= maxPrice, {
+        message: `Максимальная ставка: ${maxPrice.toLocaleString()} ₽`,
+      })
       .refine((val) => (val - minPrice) % step === 0, {
         message: `Сумма должна быть кратна шагу ставки (${step.toLocaleString()} ₽)`,
       }),
