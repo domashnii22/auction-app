@@ -29,8 +29,7 @@ interface InfoTabProps {
 export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
   const navigate = useNavigate();
 
-  const { hideBetsHistory, hidePointsAddressAndContacts, noViewCargoPrice } =
-    auction;
+  const { hidePointsAddressAndContacts, noViewCargoPrice } = auction;
 
   const showContacts =
     !hidePointsAddressAndContacts && auction.organizer.contacts;
@@ -348,17 +347,6 @@ export const InfoTab: React.FC<InfoTabProps> = ({ auction }) => {
                       ? 'Изменить ставку'
                       : 'Сделать ставку'}
                   </Button>
-
-                  {!hideBetsHistory && (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      // Переключение на вкладку ставок будет через родительский компонент
-                    >
-                      Смотреть ставки
-                    </Button>
-                  )}
                 </Stack>
 
                 {!auction.trading.canSetBet && (
