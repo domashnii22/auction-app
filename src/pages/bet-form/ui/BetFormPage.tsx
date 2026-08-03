@@ -63,12 +63,12 @@ export const BetFormPage: React.FC = () => {
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
-      <Stack spacing={1}>
+      <Stack direction={'row'} spacing={3} style={{ paddingBottom: 20 }}>
         <IconButton onClick={handleGoBack} size="small">
           <ArrowBack />
         </IconButton>
         <Typography variant="h5" component="h1">
-          {auction.trading.myBet ? 'Изменить ставку' : 'Сделать ставку'}
+          Аукцион #{auction.cargoNumber}
         </Typography>
       </Stack>
 

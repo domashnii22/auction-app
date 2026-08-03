@@ -10,18 +10,10 @@ import {
   Alert,
   Stack,
   Divider,
-  Chip,
   CircularProgress,
-  Card,
-  CardContent,
   InputAdornment,
 } from '@mui/material';
-import {
-  AttachMoney,
-  Info,
-  TrendingUp,
-  TrendingDown,
-} from '@mui/icons-material';
+import { CurrencyRuble, Info } from '@mui/icons-material';
 import { betSchema, type BetFormValues } from '../model/betSchema';
 import { useBetForm } from '../model/useBetForm';
 import type { IAuction } from '@/shared/types/api/auctions';
@@ -34,8 +26,6 @@ interface BetFormProps {
 export const BetForm: React.FC<BetFormProps> = ({ auction, onSuccess }) => {
   const {
     id,
-    cargoNumber,
-    currentPrice,
     step,
     trading: { canSetBet, minPrice, maxPrice, myBet },
   } = auction;
@@ -92,50 +82,6 @@ export const BetForm: React.FC<BetFormProps> = ({ auction, onSuccess }) => {
 
   return (
     <Box>
-      <Card variant="outlined" sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Аукцион #{cargoNumber}
-          </Typography>
-          <Stack direction="row" spacing={1}>
-            <Box>
-              <Typography variant="caption" color="text.secondary">
-                Текущая цена
-              </Typography>
-              <Typography variant="body1">
-                {currentPrice.toLocaleString()} ₽
-              </Typography>
-            </Box>
-            <Box>
-              <Typography variant="caption" color="text.secondary">
-                Шаг ставки
-              </Typography>
-              <Typography variant="body1">{step.toLocaleString()} ₽</Typography>
-            </Box>
-            <Box>
-              <Typography variant="caption" color="text.secondary">
-                Диапазон
-              </Typography>
-              <Typography variant="body1">
-                {minPrice.toLocaleString()} — {maxPrice.toLocaleString()} ₽
-              </Typography>
-            </Box>
-            {myBet && (
-              <Box>
-                <Typography variant="caption" color="text.secondary">
-                  Ваша текущая ставка
-                </Typography>
-                <Chip
-                  label={`${myBet.toLocaleString()} ₽`}
-                  color="primary"
-                  size="small"
-                />
-              </Box>
-            )}
-          </Stack>
-        </CardContent>
-      </Card>
-
       <Paper sx={{ p: 4 }}>
         <Typography variant="h5" gutterBottom>
           {myBet ? 'Изменить ставку' : 'Сделать ставку'}
@@ -157,7 +103,7 @@ export const BetForm: React.FC<BetFormProps> = ({ auction, onSuccess }) => {
                 input: {
                   startAdornment: (
                     <InputAdornment position="start">
-                      <AttachMoney />
+                      <CurrencyRuble />
                     </InputAdornment>
                   ),
                 },
@@ -179,52 +125,27 @@ export const BetForm: React.FC<BetFormProps> = ({ auction, onSuccess }) => {
                 {watchedPrice && (
                   <>
                     <br />
-                    Предыдущий шаг: {priceHint.prevStep.toLocaleString()} ₽
+                    {priceHint.prevStep >= minPrice ? (
+                      <>
+                        Предыдущий шаг: {priceHint.prevStep.toLocaleString()} ₽
+                      </>
+                    ) : (
+                      <>Предыдущий шаг: —</>
+                    )}
                     {' → '}
-                    Следующий шаг: {priceHint.nextStep.toLocaleString()} ₽
+                    {priceHint.nextStep <= maxPrice ? (
+                      <>
+                        Следующий шаг: {priceHint.nextStep.toLocaleString()} ₽
+                      </>
+                    ) : (
+                      <>Следующий шаг: —</>
+                    )}
                   </>
                 )}
               </Typography>
             </Alert>
 
-            <Stack direction={'row'} spacing={1}>
-              <Chip
-                icon={<AttachMoney />}
-                label={`Мин: ${minPrice.toLocaleString()} ₽`}
-                variant="outlined"
-                size="small"
-              />
-              <Chip
-                icon={<TrendingUp />}
-                label={`Макс: ${maxPrice.toLocaleString()} ₽`}
-                variant="outlined"
-                size="small"
-              />
-              <Chip
-                icon={<TrendingDown />}
-                label={`Шаг: ${step.toLocaleString()} ₽`}
-                variant="outlined"
-                size="small"
-              />
-            </Stack>
-
-            <Stack direction={'row'} spacing={1}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={!isValid || isPending}
-                startIcon={isPending ? <CircularProgress size={20} /> : null}
-                sx={{ minWidth: 150 }}
-              >
-                {isPending
-                  ? 'Отправка...'
-                  : myBet
-                    ? 'Изменить ставку'
-                    : 'Сделать ставку'}
-              </Button>
-
+            <Stack spacing={1}>
               <Button
                 variant="outlined"
                 color="inherit"
@@ -241,6 +162,22 @@ export const BetForm: React.FC<BetFormProps> = ({ auction, onSuccess }) => {
                 onClick={() => setValue('price', maxPrice)}
               >
                 Максимальная
+              </Button>
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                disabled={!isValid || isPending}
+                startIcon={isPending ? <CircularProgress size={20} /> : null}
+                sx={{ minWidth: 150 }}
+              >
+                {isPending
+                  ? 'Отправка...'
+                  : myBet
+                    ? 'Изменить ставку'
+                    : 'Сделать ставку'}
               </Button>
             </Stack>
           </Stack>
