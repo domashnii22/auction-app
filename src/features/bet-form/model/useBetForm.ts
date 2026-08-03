@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'react-hot-toast';
 import { auctionApi } from '@/shared/api/client';
 import { AUCTIONS_QUERY_KEY } from '@/features/auctions-list/model/useAuctionsList';
 import { AUCTION_DETAIL_QUERY_KEY } from '@/features/auctions-list/model/usePrefetchAuction';
@@ -24,6 +25,8 @@ export const useBetForm = ({ auctionId, onSuccess }: UseBetFormOptions) => {
       });
       queryClient.invalidateQueries({ queryKey: [BETS_QUERY_KEY, auctionId] });
 
+      toast.success('Ставка успешно сделана!');
+
       if (onSuccess) {
         onSuccess();
       } else {
@@ -34,8 +37,9 @@ export const useBetForm = ({ auctionId, onSuccess }: UseBetFormOptions) => {
     onError: (error: any) => {
       if (error.status === 422) {
         const message = error.response?.data?.message || 'Некорректная ставка';
-
-        return message;
+        toast.error(message);
+      } else {
+        toast.error(error.message || 'Не удалось сделать ставку');
       }
     },
   });
